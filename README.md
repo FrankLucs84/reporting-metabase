@@ -20,7 +20,7 @@ Metabase OSS salva domande e dashboard nel proprio database applicativo; la seri
 | Query | `report/sql/*.sql` | Una domanda Metabase per file, SQL leggibile e revisionabile |
 | Report | `report/report.yml` | Filtri, card, formattazione e layout del dashboard |
 | Deploy | `scripts/deploy.py` | Applica `report.yml` a Metabase tramite REST API, in modo idempotente |
-| Controllo | `.github/workflows/metabase-report.yml` | Valida la definizione ed esegue ogni query a ogni pull request |
+| Controllo | `.github/workflows/report.yml` | Valida la definizione ed esegue ogni query a ogni pull request |
 
 Le modifiche fatte a mano nell'interfaccia di Metabase vengono sovrascritte al deploy successivo. Per l'esplorazione libera conviene usare una collection diversa da quella gestita.
 
