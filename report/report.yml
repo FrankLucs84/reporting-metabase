@@ -1,0 +1,138 @@
+# Definizione dichiarativa del report Contoso su Metabase.
+# È l'unica fonte di verità: si modifica qui (e nei file sql/), poi si esegue
+#   python scripts/deploy.py apply
+# Le modifiche fatte a mano nell'interfaccia Metabase vengono sovrascritte al deploy successivo.
+
+database:
+  name: Contoso DW
+  engine: postgres
+  dbname: contoso
+  schema: contoso
+  user: metabase_ro
+  # host, porta e password arrivano da variabili d'ambiente (vedi .env.example)
+
+collection:
+  name: Contoso - Report Pareto
+  description: Contenuti gestiti da codice (repository reporting-metabase). Non modificare a mano.
+
+# Filtri del dashboard. "field" collega il filtro a una colonna del warehouse (field filter Metabase);
+# "values" definisce un elenco fisso per i filtri testuali.
+filters:
+  - key: order_date
+    name: Periodo
+    type: date/all-options
+    field: [v_sales_line, order_date]
+  - key: category
+    name: Categoria prodotto
+    type: string/=
+    field: [product, category]
+  - key: country
+    name: Paese filiale
+    type: string/=
+    field: [store, country]
+  - key: metric
+    name: Misura Pareto
+    type: string/=
+    values: [Sales Amount, Margin, Total Cost, Total Quantity]
+    default: Sales Amount
+    required: true
+
+# Domande (card). "filters" elenca i filtri usati dalla query, cioè i suoi {{tag}}.
+# x/y = colonne per assi e serie; x_title/y_title = etichette degli assi; columns = formato e titoli.
+cards:
+  - name: Vendite totali
+    sql: sql/kpi_sales_amount.sql
+    display: scalar
+    filters: [order_date, category, country]
+    columns: { sales_amount: { currency: EUR } }
+
+  - name: Margine
+    sql: sql/kpi_margin.sql
+    display: scalar
+    filters: [order_date, category, country]
+    columns: { margin: { currency: EUR } }
+
+  - name: Margine %
+    sql: sql/kpi_margin_pct.sql
+    display: scalar
+    filters: [order_date, category, country]
+    columns: { margin_pct: { percent: true } }
+
+  - name: Quantità totale
+    sql: sql/kpi_total_quantity.sql
+    display: scalar
+    filters: [order_date, category, country]
+
+  - name: Andamento mensile
+    sql: sql/monthly_trend.sql
+    display: line
+    filters: [order_date, category, country]
+    x: [month]
+    x_title: Mese
+    y_title: EUR
+    y: [sales_amount, total_cost, margin]
+    columns:
+      sales_amount: { currency: EUR, title: Vendite }
+      total_cost: { currency: EUR, title: Costi }
+      margin: { currency: EUR, title: Margine }
+
+  - name: Vendite per categoria
+    sql: sql/sales_by_category.sql
+    display: bar
+    filters: [order_date, category, country]
+    x: [category]
+    x_title: Categoria
+    y_title: Vendite (EUR)
+    y: [sales_amount]
+    columns: { sales_amount: { currency: EUR, title: Vendite } }
+
+  - name: Performance per paese
+    sql: sql/performance_by_country.sql
+    display: table
+    filters: [order_date, category, country]
+    columns:
+      country: { title: Paese }
+      stores: { title: Filiali }
+      sales_amount: { currency: EUR, title: Vendite }
+      margin: { currency: EUR, title: Margine }
+      margin_pct: { percent: true, title: Margine % }
+      total_quantity: { title: Quantità }
+
+  - name: Pareto clienti
+    sql: sql/pareto_customers.sql
+    display: combo
+    filters: [order_date, category, country, metric]
+    x: [customer]
+    x_title: Clienti (ordinati per valore)
+    y: [value, cumulative_pct]
+    series:
+      value: { display: bar, title: Valore }
+      cumulative_pct: { display: line, axis: right, title: "% cumulata" }
+    columns: { cumulative_pct: { percent: true } }
+
+  - name: Classificazione ABC clienti
+    sql: sql/pareto_abc.sql
+    display: table
+    filters: [order_date, category, country, metric]
+    columns:
+      abc_class: { title: Classe }
+      customers: { title: Clienti }
+      customers_pct: { percent: true, title: "% clienti" }
+      value: { title: Valore }
+      value_pct: { percent: true, title: "% valore" }
+
+# Layout su griglia Metabase: 24 colonne di larghezza.
+dashboard:
+  name: Contoso - Vendite e Pareto clienti
+  description: Vendite, margine e analisi di Pareto sui clienti. Fonte dati Contoso DW.
+  filters: [order_date, category, country, metric]
+  layout:
+    - { card: Vendite totali,              row: 0,  col: 0,  width: 6,  height: 3 }
+    - { card: Margine,                     row: 0,  col: 6,  width: 6,  height: 3 }
+    - { card: Margine %,                   row: 0,  col: 12, width: 6,  height: 3 }
+    - { card: Quantità totale,             row: 0,  col: 18, width: 6,  height: 3 }
+    - { card: Andamento mensile,           row: 3,  col: 0,  width: 16, height: 6 }
+    - { card: Vendite per categoria,       row: 3,  col: 16, width: 8,  height: 6 }
+    - { card: Pareto clienti,              row: 9,  col: 0,  width: 16, height: 10 }
+    - { card: Classificazione ABC clienti, row: 9,  col: 16, width: 8,  height: 5 }
+    - { card: Performance per paese,       row: 14, col: 16, width: 8,  height: 5 }

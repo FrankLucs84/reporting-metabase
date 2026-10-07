@@ -1,0 +1,43 @@
+-- Classificazione ABC dei clienti: A fino all'80% cumulato, B fino al 95%, C il resto.
+WITH points AS (
+    SELECT customer.customer_key,
+           customer.name AS customer,
+           CASE {{metric}}
+               WHEN 'Margin'         THEN sum(v_sales_line.margin)
+               WHEN 'Total Cost'     THEN sum(v_sales_line.total_cost)
+               WHEN 'Total Quantity' THEN sum(v_sales_line.quantity)
+               ELSE                       sum(v_sales_line.sales_amount)
+           END AS value
+    FROM contoso.v_sales_line
+    JOIN contoso.product  ON product.product_key   = v_sales_line.product_key
+    JOIN contoso.store    ON store.store_key       = v_sales_line.store_key
+    JOIN contoso.customer ON customer.customer_key = v_sales_line.customer_key
+    WHERE {{order_date}} AND {{category}} AND {{country}}
+    GROUP BY customer.customer_key, customer.name
+),
+ranked AS (
+    SELECT customer,
+           value,
+           row_number() OVER (ORDER BY value DESC, customer_key) AS rank,
+           sum(value) OVER (ORDER BY value DESC, customer_key
+                            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+             / nullif(sum(value) OVER (), 0) AS cumulative_pct
+    FROM points
+),
+classified AS (
+    -- La classe dipende dal cumulato PRIMA del cliente: il cliente che supera la soglia resta nella classe.
+    SELECT value,
+           CASE WHEN cumulative_pct - value / nullif(sum(value) OVER (), 0) < 0.80 THEN 'A'
+                WHEN cumulative_pct - value / nullif(sum(value) OVER (), 0) < 0.95 THEN 'B'
+                ELSE 'C'
+           END AS abc_class
+    FROM ranked
+)
+SELECT abc_class,
+       count(*)                                         AS customers,
+       count(*)::numeric / sum(count(*)) OVER ()        AS customers_pct,
+       sum(value)                                       AS value,
+       sum(value) / nullif(sum(sum(value)) OVER (), 0)  AS value_pct
+FROM classified
+GROUP BY abc_class
+ORDER BY abc_class

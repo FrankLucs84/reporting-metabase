@@ -1,0 +1,37 @@
+name: Report Metabase
+
+on:
+  pull_request:
+    paths-ignore: ["docs/**", "**.md"]
+  push:
+    branches: [main]
+    paths-ignore: ["docs/**", "**.md"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Valida la definizione del report
+        run: |
+          pip install -r scripts/requirements.txt
+          python scripts/deploy.py validate
+
+      - name: Avvia il warehouse con i dati di esempio
+        run: |
+          cp .env.example .env
+          docker compose --env-file .env up -d --wait warehouse
+
+      - name: Esegue ogni query SQL sul warehouse
+        run: |
+          for f in report/sql/*.sql; do
+            echo "== $f"
+            sed -e 's/{{order_date}}/1=1/g; s/{{category}}/1=1/g; s/{{country}}/1=1/g' \
+                -e "s/{{metric}}/'Sales Amount'/g" "$f" \
+              | docker compose exec -T warehouse psql -U contoso_admin -d contoso -v ON_ERROR_STOP=1 -q -o /dev/null
+          done
