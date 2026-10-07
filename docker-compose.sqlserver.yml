@@ -1,0 +1,53 @@
+# Ambiente locale per Windows: Metabase legge da SQL Server INSTALLATO SUL PC.
+#   appdb    -> PostgreSQL che conserva domande, dashboard e utenti di Metabase
+#   metabase -> Metabase Open Source, su http://localhost:3000
+#
+# SQL Server non è qui dentro: è quello installato su Windows.
+# Dal container, il PC si raggiunge con il nome "host.docker.internal".
+#
+# Avvio:   docker compose -f docker-compose.sqlserver.yml --env-file .env up -d
+# Arresto: docker compose -f docker-compose.sqlserver.yml --env-file .env down
+name: metabase-locale
+
+services:
+  appdb:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_USER: metabase
+      POSTGRES_PASSWORD: ${MB_APPDB_PASSWORD:?imposta MB_APPDB_PASSWORD in .env}
+    volumes:
+      - appdb-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabase -d metabase"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  metabase:
+    image: metabase/metabase:${METABASE_VERSION:-v0.56.6}
+    depends_on:
+      appdb: { condition: service_healthy }
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: appdb
+      MB_DB_PORT: 5432
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${MB_APPDB_PASSWORD}
+      MB_SITE_LOCALE: it
+      MB_ANON_TRACKING_ENABLED: "false"
+      JAVA_TIMEZONE: Europe/Rome
+    extra_hosts:
+      # Su Docker Desktop esiste già; serve su Linux. Innocuo in entrambi i casi.
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${METABASE_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      retries: 30
+    restart: unless-stopped
+
+volumes:
+  appdb-data:

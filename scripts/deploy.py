@@ -10,6 +10,7 @@ Uso:
     python scripts/deploy.py validate          # controlla la definizione, senza Metabase
     python scripts/deploy.py apply             # crea o aggiorna il report
     python scripts/deploy.py apply --prune     # archivia anche le domande non più definite
+    python scripts/deploy.py apply --target sqlserver   # usa SQL Server invece di PostgreSQL
 
 Configurazione da variabili d'ambiente o dal file .env (vedi .env.example).
 """
@@ -36,7 +37,7 @@ GRID_WIDTH = 24
 def load_env():
     env_file = ROOT / ".env"
     if env_file.exists():
-        for line in env_file.read_text().splitlines():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
                 key, value = line.split("=", 1)
@@ -56,10 +57,14 @@ def stable_id(*parts):
 
 # --------------------------------------------------------------------------- validate
 
-def load_report():
-    report = yaml.safe_load((REPORT_DIR / "report.yml").read_text())
+def load_report(target):
+    report = yaml.safe_load((REPORT_DIR / "report.yml").read_text(encoding="utf-8"))
+    if target not in report["targets"]:
+        sys.exit(f"Target '{target}' sconosciuto: scegli tra {', '.join(report['targets'])}")
+    report["database"] = report["targets"][target]
+    sql_dir = REPORT_DIR / report["database"]["sql_dir"]
     for card in report["cards"]:
-        card["query"] = (REPORT_DIR / card["sql"]).read_text()
+        card["query"] = (sql_dir / card["sql"]).read_text(encoding="utf-8")
     return report
 
 
@@ -150,17 +155,25 @@ def as_list(payload):
     return payload["data"] if isinstance(payload, dict) and "data" in payload else payload
 
 
-def ensure_database(mb, spec):
+def connection_details(spec):
     details = {
         "host": env("MB_WAREHOUSE_HOST", "warehouse"),
         "port": int(env("MB_WAREHOUSE_PORT", "5432")),
-        "dbname": spec["dbname"],
         "user": spec["user"],
         "password": env("WAREHOUSE_RO_PASSWORD"),
         "ssl": False,
-        "schema-filters-type": "inclusion",
-        "schema-filters-patterns": spec["schema"],
     }
+    if spec["engine"] == "sqlserver":
+        # Connessione cifrata (SSL), accettando il certificato autofirmato di un SQL Server locale
+        details.update({"db": spec["dbname"], "ssl": True, "additional-options": "trustServerCertificate=true"})
+    else:
+        details.update({"dbname": spec["dbname"], "schema-filters-type": "inclusion",
+                        "schema-filters-patterns": spec["schema"]})
+    return details
+
+
+def ensure_database(mb, spec):
+    details = connection_details(spec)
     existing = next((d for d in as_list(mb.call("GET", "/database")) if d["name"] == spec["name"]), None)
     if existing:
         mb.call("PUT", f"/database/{existing['id']}", json={"details": details})
@@ -348,17 +361,20 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=["validate", "apply"])
     parser.add_argument("--prune", action="store_true", help="archivia le domande non più presenti in report.yml")
+    parser.add_argument("--target", help="postgres o sqlserver (predefinito: MB_TARGET, altrimenti postgres)")
     args = parser.parse_args()
 
     load_env()
-    report = load_report()
+    target = args.target or os.environ.get("MB_TARGET", "postgres")
+    report = load_report(target)
     errors = validate(report)
     if errors:
         print("Definizione del report non valida:")
         for error in errors:
             print(f"  - {error}")
         sys.exit(1)
-    print(f"Definizione valida: {len(report['cards'])} domande, {len(report['dashboard']['layout'])} riquadri")
+    print(f"Definizione valida ({target}): {len(report['cards'])} domande, "
+          f"{len(report['dashboard']['layout'])} riquadri")
     if args.command == "apply":
         apply(report, args.prune)
 

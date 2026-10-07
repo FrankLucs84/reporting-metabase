@@ -20,7 +20,8 @@ jobs:
       - name: Valida la definizione del report
         run: |
           pip install -r scripts/requirements.txt
-          python scripts/deploy.py validate
+          python scripts/deploy.py validate --target postgres
+          python scripts/deploy.py validate --target sqlserver
 
       - name: Avvia il warehouse con i dati di esempio
         run: |
@@ -29,9 +30,44 @@ jobs:
 
       - name: Esegue ogni query SQL sul warehouse
         run: |
-          for f in report/sql/*.sql; do
+          for f in report/sql/postgres/*.sql; do
             echo "== $f"
             sed -e 's/{{order_date}}/1=1/g; s/{{category}}/1=1/g; s/{{country}}/1=1/g' \
                 -e "s/{{metric}}/'Sales Amount'/g" "$f" \
               | docker compose exec -T warehouse psql -U contoso_admin -d contoso -v ON_ERROR_STOP=1 -q -o /dev/null
+          done
+
+  sqlserver:
+    runs-on: ubuntu-latest
+    env:
+      SA_PASSWORD: Ci-Test-Passw0rd!
+      SQLCMD: docker exec mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -C -b
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Avvia SQL Server 2022
+        run: |
+          docker run -d --name mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD="$SA_PASSWORD" \
+            -v "$PWD:/repo:ro" mcr.microsoft.com/mssql/server:2022-latest
+          for i in $(seq 1 30); do
+            $SQLCMD -U sa -P "$SA_PASSWORD" -Q "SELECT 1" >/dev/null 2>&1 && break
+            sleep 3
+          done
+
+      - name: Esegue gli script di installazione (01-04)
+        run: |
+          for f in sqlserver/*.sql; do
+            echo "== $f"
+            $SQLCMD -U sa -P "$SA_PASSWORD" -i "/repo/$f"
+          done
+
+      - name: Esegue ogni query T-SQL con l'utente in sola lettura
+        run: |
+          mkdir -p /tmp/q
+          for f in report/sql/sqlserver/*.sql; do
+            echo "== $f"
+            sed -e 's/{{order_date}}/1=1/g; s/{{category}}/1=1/g; s/{{country}}/1=1/g' \
+                -e "s/{{metric}}/'Sales Amount'/g" "$f" > /tmp/q/query.sql
+            docker cp /tmp/q/query.sql mssql:/tmp/query.sql
+            $SQLCMD -U metabase_ro -P 'Cambiami-Metabase-2026!' -d ContosoLab -i /tmp/query.sql -o /dev/null
           done

@@ -1,15 +1,26 @@
 # Definizione dichiarativa del report Contoso su Metabase.
-# È l'unica fonte di verità: si modifica qui (e nei file sql/), poi si esegue
+# È l'unica fonte di verità: si modifica qui (e nei file sql/<target>/), poi si esegue
 #   python scripts/deploy.py apply
 # Le modifiche fatte a mano nell'interfaccia Metabase vengono sovrascritte al deploy successivo.
 
-database:
-  name: Contoso DW
-  engine: postgres
-  dbname: contoso
-  schema: contoso
-  user: metabase_ro
-  # host, porta e password arrivano da variabili d'ambiente (vedi .env.example)
+# Database di origine. Si sceglie con MB_TARGET nel file .env (postgres o sqlserver):
+# ogni target ha la sua cartella di query, perché i due dialetti SQL differiscono.
+targets:
+  postgres:
+    name: Contoso DW
+    engine: postgres
+    dbname: contoso
+    schema: contoso
+    user: metabase_ro
+    sql_dir: sql/postgres
+  sqlserver:
+    name: Contoso DW (SQL Server)
+    engine: sqlserver
+    dbname: ContosoLab
+    schema: contoso
+    user: metabase_ro
+    sql_dir: sql/sqlserver
+# host, porta e password arrivano da variabili d'ambiente (vedi .env.example)
 
 collection:
   name: Contoso - Report Pareto
@@ -41,30 +52,30 @@ filters:
 # x/y = colonne per assi e serie; x_title/y_title = etichette degli assi; columns = formato e titoli.
 cards:
   - name: Vendite totali
-    sql: sql/kpi_sales_amount.sql
+    sql: kpi_sales_amount.sql
     display: scalar
     filters: [order_date, category, country]
     columns: { sales_amount: { currency: EUR } }
 
   - name: Margine
-    sql: sql/kpi_margin.sql
+    sql: kpi_margin.sql
     display: scalar
     filters: [order_date, category, country]
     columns: { margin: { currency: EUR } }
 
   - name: Margine %
-    sql: sql/kpi_margin_pct.sql
+    sql: kpi_margin_pct.sql
     display: scalar
     filters: [order_date, category, country]
     columns: { margin_pct: { percent: true } }
 
   - name: Quantità totale
-    sql: sql/kpi_total_quantity.sql
+    sql: kpi_total_quantity.sql
     display: scalar
     filters: [order_date, category, country]
 
   - name: Andamento mensile
-    sql: sql/monthly_trend.sql
+    sql: monthly_trend.sql
     display: line
     filters: [order_date, category, country]
     x: [month]
@@ -77,7 +88,7 @@ cards:
       margin: { currency: EUR, title: Margine }
 
   - name: Vendite per categoria
-    sql: sql/sales_by_category.sql
+    sql: sales_by_category.sql
     display: bar
     filters: [order_date, category, country]
     x: [category]
@@ -87,7 +98,7 @@ cards:
     columns: { sales_amount: { currency: EUR, title: Vendite } }
 
   - name: Performance per paese
-    sql: sql/performance_by_country.sql
+    sql: performance_by_country.sql
     display: table
     filters: [order_date, category, country]
     columns:
@@ -99,7 +110,7 @@ cards:
       total_quantity: { title: Quantità }
 
   - name: Pareto clienti
-    sql: sql/pareto_customers.sql
+    sql: pareto_customers.sql
     display: combo
     filters: [order_date, category, country, metric]
     x: [customer]
@@ -111,7 +122,7 @@ cards:
     columns: { cumulative_pct: { percent: true } }
 
   - name: Classificazione ABC clienti
-    sql: sql/pareto_abc.sql
+    sql: pareto_abc.sql
     display: table
     filters: [order_date, category, country, metric]
     columns:
