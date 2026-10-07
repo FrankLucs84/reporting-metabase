@@ -146,7 +146,7 @@ Nella cartella `sqlserver/` di questa repository (vedi sezione 4.1 per scaricarl
 | `01_database_e_tabelle.sql` | Crea il database **ContosoLab**, lo schema `contoso` e le 5 tabelle (sales, customer, product, store, date) | Si può rieseguire: ricrea le tabelle **vuote** |
 | `02_dati_esempio.sql` | Carica dati **sintetici**: 500 clienti, 60 prodotti, 12 negozi, 30.000 vendite 2023–2025 | Sempre gli stessi numeri a ogni esecuzione |
 | `03_vista_misure.sql` | Crea la vista `contoso.v_sales_line` con le misure (vendite, costo, margine) | È il "livello semantico", l'equivalente delle misure DAX |
-| `04_utente_metabase.sql` | Crea l'utente **`metabase_ro`**, che **può solo leggere** lo schema `contoso` | Password predefinita: `Cambiami-Metabase-2026!` |
+| `04_utente_metabase.sql` | Crea l'utente **`metabase_ro`**, che **può solo leggere** lo schema `contoso` | Password predefinita: `Cambiami-Metabase-2026!` (pubblica: cambiatela prima di usare dati reali, vedi 9.5) |
 
 Come eseguirli in SSMS:
 
@@ -170,7 +170,7 @@ FROM contoso.v_sales_line;
 > 🧯 **Se avete eseguito lo script 04 senza cambiare la password** 🪟
 >
 > Non è un problema. Avete due possibilità:
-> - **tenere la password predefinita** `Cambiami-Metabase-2026!`: il file `.env.sqlserver.example` contiene già la stessa, quindi combaciano senza toccare niente. Va bene per una palestra locale [Inferenza];
+> - **tenere la password predefinita** `Cambiami-Metabase-2026!`: il file `.env.sqlserver.example` contiene già la stessa, quindi combaciano senza toccare niente. Va bene **solo** per una palestra locale con dati di esempio: la password è pubblica su GitHub (vedi 9.5) [Inferenza];
 > - **cambiarla**. Attenzione: **rieseguire lo script 04 non la cambia**, perché lo script crea l'utente solo se non esiste ancora. Usate invece, in una Nuova query:
 >
 >   ```sql
@@ -698,6 +698,42 @@ docker compose -f docker-compose.sqlserver.yml --env-file .env down -v
 
 L'opzione `-v` **cancella** domande e dashboard di Metabase; i dati di SQL Server restano. Per azzerare anche quelli, rieseguite gli script 01 e 02.
 
+### 9.5 Sicurezza: cambiare le password di esempio
+
+Le password nei file `.env.*.example` e nello script `04_utente_metabase.sql` sono **pubblicate su GitHub**, quindi vanno considerate **note a chiunque**.
+
+**Quanto è rischioso tenerle?** Dipende da chi può raggiungere il PC [Inferenza]:
+
+| Situazione | Rischio | Perché |
+|---|---|---|
+| PC a casa, dati di esempio, Metabase limitato al PC | **Basso** | Metabase risponde solo su `127.0.0.1` (✅ provato); `metabase_ro` può solo **leggere** dati sintetici |
+| PC in una rete condivisa (ufficio, Wi-Fi pubblico) | **Medio** | SQL Server ascolta sulla porta 1433: se il firewall di Windows la lascia passare, qualcuno della stessa rete può provare le password note |
+| Dati reali o aziendali nel database | **Alto** | Chi conosce la password può leggere tutto lo schema `contoso` |
+
+**Cosa è già protetto per costruzione:**
+- Metabase è pubblicato solo su `127.0.0.1:3000`: dagli altri dispositivi della rete non si raggiunge (✅ provato).
+- Il database interno di Metabase (`appdb`) non è esposto fuori da Docker.
+- `metabase_ro` ha solo il permesso di **lettura** sullo schema `contoso`: non può modificare né cancellare dati (✅ provato: un `DELETE` viene rifiutato).
+
+**Cambiare le password (10 minuti) — da fare prima di usare dati reali:**
+
+1. **Utente del database `metabase_ro`.** In SSMS, Nuova query:
+   ```sql
+   ALTER LOGIN metabase_ro WITH PASSWORD = N'UnaPasswordSoloVostra-2026!';
+   ```
+   Poi nel `.env` (`notepad .env`) aggiornate `WAREHOUSE_RO_PASSWORD=` con la stessa password.
+2. **Amministratore di Metabase.** In Metabase: icona in alto a destra → **Impostazioni account** → **Password** [Non verificato: etichette esatte dei menu]. Poi aggiornate `MB_ADMIN_PASSWORD=` nel `.env` (e, se volete, `MB_ADMIN_EMAIL=` con la vostra email).
+3. **Rilanciate lo script**, che aggiorna la password del database salvata in Metabase:
+   ```powershell
+   python scripts\deploy.py apply
+   ```
+4. **Controllate l'utente `sa`.** In SSMS → **Sicurezza → Account di accesso → sa** → clic destro **Proprietà → Stato**: se non lo usate, lasciatelo **Disabilitato**; se è abilitato, dategli una password robusta.
+
+**Regole d'oro:**
+- il file `.env` resta solo sul vostro PC: è escluso da Git e **non va mai caricato su GitHub** né inviato via email;
+- non aprite la porta 1433 nel firewall verso la rete se non serve: Metabase in Docker la raggiunge dall'interno del PC;
+- password diverse per ogni utente, e diverse da quelle che usate altrove.
+
 ---
 
 ## 10. Risoluzione dei problemi
@@ -811,6 +847,7 @@ Differenze rispetto a Docker:
 | R3 | Dati di esempio scambiati per dati reali | Decisioni errate | Il nome `ContosoLab` e i commenti negli script segnalano dati sintetici | Certo |
 | R4 | Perdita di dashboard create a mano | Lavoro perso | Backup di appdb (9.2); il report gestito da codice è in Git | Certo |
 | R5 | Le modifiche a mano nella collezione "Contoso - Report Pareto" vengono sovrascritte dallo script | Lavoro perso | Lavorare nella collezione personale o in un'altra collezione | Certo |
+| R7 | Password di esempio pubblicate su GitHub usate con dati reali o in rete condivisa | Accesso non autorizzato ai dati | Cambio password (9.5); Metabase limitato a `127.0.0.1`; utente in sola lettura | Mitigato in parte per costruzione; cambio password a carico dell'utente |
 | R6 | Le edizioni gratuite (SQL Server Express, Metabase OSS) hanno funzioni limitate (dimensione DB, RLS, SSO) | Limiti in crescita | Rivalutare le edizioni quando l'ambiente passa da "palestra" a "servizio" | [Non verificato: limiti attuali] |
 
 ### Domande aperte
