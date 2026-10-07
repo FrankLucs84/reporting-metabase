@@ -44,6 +44,8 @@ Tutti i passaggi, spiegati per chi parte da zero, sono nella **[guida all'uso](d
    py scripts\deploy.py apply
    ```
 
+   Con Anaconda (riga di PowerShell che inizia con `(base)`) usate `pip` e `python` al posto di `py -m pip` e `py`. Se Docker Desktop segnala problemi di **WSL** o **virtualizzazione**, seguite la sezione 3 della guida: raccoglie gli errori incontrati davvero su Windows e le soluzioni.
+
 ### Opzione 2 — Tutto in Docker con PostgreSQL
 
 ```bash
