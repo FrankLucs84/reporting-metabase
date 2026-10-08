@@ -25,13 +25,13 @@ DATABASE_NAME = "Portfolio (SQL Server)"
 
 QUERIES = {
     "progetti": """
-        SELECT codice, nome, settore, approccio, ruolo, stato,
-               data_inizio, data_fine_prevista, data_fine_effettiva,
+        SELECT codice, nome, organizzazione, settore, approccio, ruolo, stato,
+               data_inizio, data_fine_prevista, data_fine_effettiva, date_indicative,
                scostamento_tempi_pct, scostamento_costi_pct,
                soddisfazione_cliente, descrizione
         FROM portfolio.v_progetto_kpi
         WHERE pubblicabile = 1
-        ORDER BY data_inizio""",
+        ORDER BY data_inizio, codice""",
     "competenze": """
         SELECT competenza.nome, competenza.area, competenza.livello
         FROM portfolio.competenza
@@ -46,7 +46,7 @@ QUERIES = {
         SELECT titolo, ente, tipo, area, data_conseguimento, ore, pdu, credenziale_url
         FROM portfolio.formazione
         WHERE pubblicabile = 1
-        ORDER BY data_conseguimento""",
+        ORDER BY CASE WHEN data_conseguimento IS NULL THEN 1 ELSE 0 END, data_conseguimento, titolo""",
     "casi": """
         SELECT titolo, dataset, strumenti, data_pubblicazione, link_url, descrizione
         FROM portfolio.caso_analisi

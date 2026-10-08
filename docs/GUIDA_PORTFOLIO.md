@@ -34,8 +34,8 @@ Prerequisito: avete completato la [guida all'uso di Metabase](GUIDA_USO_METABASE
 
 | Tabella | Cosa ci mettete | Campi principali |
 |---|---|---|
-| `progetto` | I progetti seguiti come PM / BA | codice, nome, settore, **approccio** (Predittivo / Agile / Ibrido), ruolo, **stato** (Pianificato / In corso / Completato / Sospeso), date di inizio e fine (prevista ed effettiva), budget e costo (facoltativi), soddisfazione cliente 1–5, descrizione, **pubblicabile** |
-| `competenza` | Le vostre competenze | nome, area (Project Management, Business Analysis, Dati e Reporting, Intelligenza Artificiale, Strumenti), livello 1–5 |
+| `progetto` | I progetti seguiti come PM / BA | codice, nome, organizzazione, settore, **approccio** (Predittivo / Agile / Ibrido, oppure vuoto = non indicato), ruolo, **date_indicative** (1 = date approssimate), **stato** (Pianificato / In corso / Completato / Sospeso), date di inizio e fine (prevista ed effettiva), budget e costo (facoltativi), soddisfazione cliente 1–5, descrizione, **pubblicabile** |
+| `competenza` | Le vostre competenze | nome, area (Project Management, Business Analysis, ICT ed ERP, Dati e reporting, Intelligenza artificiale e conformità, Sviluppo, Competenze trasversali), livello 1–5 facoltativo |
 | `progetto_competenza` | Quali competenze avete usato in quali progetti | collegamento progetto ↔ competenza |
 | `formazione` | Certificazioni, corsi, webinar, eventi | titolo, ente, tipo, area, data, ore, PDU, link alla credenziale, **pubblicabile** |
 | `caso_analisi` | Report e dashboard realizzati | titolo, dataset, strumenti, data, link, descrizione, **pubblicabile** |
@@ -44,9 +44,9 @@ Prerequisito: avete completato la [guida all'uso di Metabase](GUIDA_USO_METABASE
 
 | KPI | Formula | Note |
 |---|---|---|
-| Scostamento tempi | (durata effettiva − durata prevista) / durata prevista | > 0 = ritardo. Solo progetti con data di fine effettiva |
+| Scostamento tempi | (durata effettiva − durata prevista) / durata prevista | > 0 = ritardo. Solo progetti con date **non** indicative e con fine prevista ed effettiva |
 | Scostamento costi | (costo effettivo − budget) / budget | > 0 = sopra budget. **Solo progetti Completati**: a progetto in corso il costo sostenuto finora non è confrontabile con il budget totale |
-| Puntualità | completati entro la fine prevista / completati | Calcolata nel report |
+| Puntualità | completati entro la fine prevista / completati misurabili | Solo progetti con date non indicative. Se non ce ne sono, la pagina nasconde il riquadro |
 
 [Inferenza] Sono indicatori semplici di Schedule e Cost Management (PMBOK). Non sostituiscono SPI e CPI dell'Earned Value, che richiederebbero il valore pianificato e il valore guadagnato nel tempo.
 
@@ -73,10 +73,23 @@ Nella cartella `sqlserver/portfolio/` della repository. Eseguite i file **in ord
 |---|---|---|
 | `01_database_e_tabelle.sql` | Crea `PortfolioLab`, lo schema `portfolio` e le 5 tabelle | Una volta. ⚠️ Rieseguirlo **cancella tutti i dati** |
 | `02_vista_kpi.sql` | Crea la vista dei KPI | Una volta (si può rieseguire senza perdere dati) |
-| `03_dati_esempio.sql` | Inserisce dati **inventati** (codici `ESEMPIO-…`) per vedere subito il report | Facoltativo |
+| `03_dati_esempio.sql` | Inserisce dati **inventati** (codici `ESEMPIO-…`) per provare il report | Facoltativo, **non usarlo** se caricate i dati reali |
 | `04_utente_metabase.sql` | Dà a `metabase_ro` la **sola lettura** sullo schema `portfolio` | Una volta |
 | `05_cancella_esempi.sql` | Cancella **solo** i dati di esempio | Quando inserite i vostri dati |
 | `06_modello_inserimento.sql` | **Modello** da copiare per inserire i vostri dati | Ogni volta che aggiungete qualcosa |
+| `07_dati_dal_cv.sql` | Carica i **dati reali del CV** (15 progetti, 30 competenze, 7 voci di formazione, 2 casi di analisi) | Al posto di 03. Rieseguibile: ricarica tutto il portfolio |
+
+**Ordine consigliato con i dati reali:** `01` → `02` → `07` → `04`.
+
+> **Come sono stati trasformati i dati del CV (07)** — per non inventare nulla:
+> - ogni progetto è un'attività descritta nel CV, con l'organizzazione e il ruolo indicati;
+> - **date**: il CV non riporta le date dei singoli progetti, quindi si usa il **periodo del ruolo** e il progetto è segnato con `date_indicative = 1`. Queste date non entrano nei KPI di tempi e puntualità, e la pagina lo dichiara;
+> - **approccio**: lasciato **vuoto (non indicato)**, perché il CV non lo specifica per progetto;
+> - **stato**: *Completato* per i ruoli conclusi; *In corso* per le attività del ruolo attuale (Head of PMO dal 01/2026) → **da confermare**;
+> - **budget, costi, soddisfazione, ore di formazione, date delle certificazioni**: non presenti nel CV, quindi vuoti. La pagina nasconde le sezioni che li userebbero invece di mostrare zeri;
+> - **collegamenti progetto–competenza**: ricavati dal testo di ogni attività ([Inferenza], da rivedere).
+>
+> Per arricchire i dati (date reali, approccio, ore) aggiornate le righe con `UPDATE` (sezione 4) e ripetete l'export.
 
 ✅ Provato: dopo lo script 03 compaiono 8 progetti, 12 competenze, 25 collegamenti, 7 attività di formazione e 1 caso di analisi.
 

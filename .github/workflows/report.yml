@@ -87,3 +87,12 @@ jobs:
           $SQLCMD -U sa -P "$SA_PASSWORD" -i /repo/sqlserver/portfolio/06_modello_inserimento.sql -o /dev/null
           $SQLCMD -U sa -P "$SA_PASSWORD" -i /repo/sqlserver/portfolio/05_cancella_esempi.sql
           $SQLCMD -U sa -P "$SA_PASSWORD" -d PortfolioLab -h -1 -Q "SET NOCOUNT ON; IF (SELECT COUNT(*) FROM portfolio.progetto) <> 1 THROW 50000, 'pulizia esempi non corretta', 1"
+
+      - name: Carica i dati reali dal CV e riesegue le query del Portfolio
+        run: |
+          $SQLCMD -U sa -P "$SA_PASSWORD" -i /repo/sqlserver/portfolio/07_dati_dal_cv.sql
+          for f in report/portfolio/sql/sqlserver/*.sql; do
+            sed -e 's/{{approccio}}/1=1/g; s/{{stato}}/1=1/g; s/{{settore}}/1=1/g' "$f" > /tmp/q/query.sql
+            docker cp /tmp/q/query.sql mssql:/tmp/query.sql
+            $SQLCMD -U metabase_ro -P 'Cambiami-Metabase-2026!' -d PortfolioLab -i /tmp/query.sql -o /dev/null
+          done

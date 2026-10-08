@@ -16,12 +16,12 @@ INSERT INTO portfolio.competenza (nome, area, livello) VALUES
     (N'Scrum / Agile',                 N'Project Management',       4),
     (N'Analisi dei requisiti',         N'Business Analysis',        5),
     (N'Modellazione dei processi',     N'Business Analysis',        4),
-    (N'SQL',                           N'Dati e Reporting',         4),
-    (N'Power BI / DAX',                N'Dati e Reporting',         4),
-    (N'Metabase',                      N'Dati e Reporting',         3),
-    (N'Gestione progetti AI (CPMAI)',  N'Intelligenza Artificiale', 3),
-    (N'Prompt engineering',            N'Intelligenza Artificiale', 3),
-    (N'MS Project / Jira',             N'Strumenti',                4);
+    (N'SQL',                           N'Dati e reporting',         4),
+    (N'Power BI / DAX',                N'Dati e reporting',         4),
+    (N'Metabase',                      N'Dati e reporting',         3),
+    (N'Gestione progetti AI (CPMAI)',  N'Intelligenza artificiale e conformità', 3),
+    (N'Prompt engineering',            N'Intelligenza artificiale e conformità', 3),
+    (N'MS Project / Jira',             N'ICT ed ERP',                4);
 
 INSERT INTO portfolio.progetto (codice, nome, settore, approccio, ruolo, stato, data_inizio,
                                 data_fine_prevista, data_fine_effettiva, budget_previsto,
@@ -55,10 +55,10 @@ JOIN portfolio.competenza AS c ON c.nome   = link.competenza;
 INSERT INTO portfolio.formazione (titolo, ente, tipo, area, data_conseguimento, ore, pdu, credenziale_url, pubblicabile) VALUES
     (N'[Esempio] Certificazione di project management', N'Ente certificatore', N'Certificazione', N'Project Management',       '2023-06-20', 35, 35, NULL, 1),
     (N'[Esempio] Corso Agile e Scrum',                  N'Ente formativo',     N'Corso',          N'Project Management',       '2023-11-10', 16, 16, NULL, 1),
-    (N'[Esempio] SQL per l''analisi dati',              N'Ente formativo',     N'Corso',          N'Dati e Reporting',         '2024-02-15', 24, NULL, NULL, 1),
+    (N'[Esempio] SQL per l''analisi dati',              N'Ente formativo',     N'Corso',          N'Dati e reporting',         '2024-02-15', 24, NULL, NULL, 1),
     (N'[Esempio] Business analysis: requisiti',         N'Ente formativo',     N'Corso',          N'Business Analysis',        '2024-05-08', 21, 21, NULL, 1),
-    (N'[Esempio] Webinar AI nei progetti',              N'Associazione',       N'Webinar',        N'Intelligenza Artificiale', '2024-10-03',  2,  2, NULL, 1),
-    (N'[Esempio] Gestione di progetti AI',              N'Ente formativo',     N'Certificazione', N'Intelligenza Artificiale', '2025-04-18', 30, 30, NULL, 1),
+    (N'[Esempio] Webinar AI nei progetti',              N'Associazione',       N'Webinar',        N'Intelligenza artificiale e conformità', '2024-10-03',  2,  2, NULL, 1),
+    (N'[Esempio] Gestione di progetti AI',              N'Ente formativo',     N'Certificazione', N'Intelligenza artificiale e conformità', '2025-04-18', 30, 30, NULL, 1),
     (N'[Esempio] Convegno annuale PM',                  N'Associazione',       N'Evento',         N'Project Management',       '2025-10-24',  8,  8, NULL, 1);
 
 INSERT INTO portfolio.caso_analisi (titolo, dataset, strumenti, data_pubblicazione, link_url, descrizione, pubblicabile) VALUES

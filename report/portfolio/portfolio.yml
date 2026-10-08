@@ -41,7 +41,7 @@ cards:
     filters: [approccio, stato, settore]
 
   - name: Puntualità
-    description: Quota di progetti completati entro la data di fine prevista.
+    description: Quota di progetti completati entro la data di fine prevista. Esclude i progetti con date indicative.
     sql: kpi_puntualita.sql
     display: scalar
     filters: [approccio, stato, settore]
@@ -96,6 +96,7 @@ cards:
     columns:
       codice: { title: Codice }
       nome: { title: Progetto }
+      organizzazione: { title: Organizzazione }
       settore: { title: Settore }
       approccio: { title: Approccio }
       ruolo: { title: Ruolo }
@@ -103,6 +104,7 @@ cards:
       data_inizio: { title: Inizio }
       data_fine_prevista: { title: Fine prevista }
       data_fine_effettiva: { title: Fine effettiva }
+      date_indicative: { title: Date indicative }
       pubblicabile: { title: Pubblicabile }
 
 dashboard:

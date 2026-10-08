@@ -27,6 +27,7 @@
     --series-1: #2a78d6;
     --series-2: #eb6834;
     --series-3: #1baf7a;
+    --series-none: #a3a29b;
     --div-low: #2a78d6;
     --div-high: #e34948;
     --banner: #fff4d6;
@@ -47,6 +48,7 @@
       --series-1: #3987e5;
       --series-2: #d95926;
       --series-3: #199e70;
+      --series-none: #6e6d68;
       --div-low: #3987e5;
       --div-high: #e66767;
       --banner: #3a3010;
@@ -67,6 +69,7 @@
     --series-1: #3987e5;
     --series-2: #d95926;
     --series-3: #199e70;
+    --series-none: #6e6d68;
     --div-low: #3987e5;
     --div-high: #e66767;
     --banner: #3a3010;
@@ -148,6 +151,12 @@
   }
   .tooltip strong { display: block; font-size: 15px; }
   .tooltip .muted { color: var(--text-secondary); }
+  header .sintesi { margin-top: 10px; max-width: 760px; color: var(--text-secondary); }
+  .areas { display: grid; gap: 14px; }
+  .area h4 { margin: 0 0 6px; font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--page); }
+  [hidden] { display: none !important; }
   footer { margin-top: 48px; color: var(--text-muted); font-size: 13px; }
   .hit { cursor: default; }
   .mark { pointer-events: none; }
@@ -160,6 +169,7 @@
   <header>
     <h1 id="titolo">Portfolio professionale</h1>
     <p id="sottotitolo">Progetti, competenze e formazione</p>
+    <p class="sintesi" id="sintesi" hidden></p>
     <div class="links" id="links"></div>
   </header>
   <div class="banner" id="banner" hidden>Questa pagina contiene <strong>dati di esempio</strong>, inventati a scopo dimostrativo.</div>
@@ -176,18 +186,18 @@
   <div class="tiles">
     <div class="tile"><div class="value" id="k-progetti">–</div><div class="label">Progetti</div></div>
     <div class="tile"><div class="value" id="k-completati">–</div><div class="label">Completati</div></div>
-    <div class="tile"><div class="value" id="k-puntualita">–</div><div class="label">Puntualità</div><div class="hint">completati entro la data prevista</div></div>
+    <div class="tile" id="tile-puntualita"><div class="value" id="k-puntualita">–</div><div class="label">Puntualità</div><div class="hint">completati entro la data prevista</div></div>
     <div class="tile"><div class="value" id="k-settori">–</div><div class="label">Settori</div></div>
   </div>
 
   <div class="card">
     <h3>Cronologia dei progetti</h3>
-    <p class="sub">Dall'inizio alla fine effettiva (o prevista, se il progetto non è concluso).</p>
+    <p class="sub" id="sub-gantt">Dall'inizio alla fine effettiva (o prevista, se il progetto non è concluso).</p>
     <div class="legend" id="legend-gantt"></div>
     <div class="chart" id="chart-gantt"></div>
   </div>
 
-  <div class="grid-2">
+  <div class="grid-2" id="grid-scostamenti">
     <div class="card">
       <h3>Scostamento dei tempi</h3>
       <p class="sub">Progetti completati. A destra dello zero = ritardo, a sinistra = in anticipo.</p>
@@ -206,6 +216,12 @@
     <div class="chart" id="chart-competenze"></div>
   </div>
 
+  <div class="card">
+    <h3>Competenze dichiarate</h3>
+    <p class="sub">Tutte le competenze, per area.</p>
+    <div class="areas" id="l-competenze"></div>
+  </div>
+
   <details>
     <summary>Mostra i progetti in tabella</summary>
     <div class="table-wrap"><table id="t-progetti"></table></div>
@@ -214,19 +230,20 @@
   <h2>Formazione</h2>
   <p class="section-note">Certificazioni, corsi, webinar ed eventi.</p>
   <div class="tiles">
-    <div class="tile"><div class="value" id="k-ore">–</div><div class="label">Ore di formazione</div></div>
+    <div class="tile" id="tile-ore"><div class="value" id="k-ore">–</div><div class="label">Ore di formazione</div></div>
     <div class="tile"><div class="value" id="k-cert">–</div><div class="label">Certificazioni</div></div>
-    <div class="tile"><div class="value" id="k-pdu">–</div><div class="label">PDU</div><div class="hint">Professional Development Units</div></div>
+    <div class="tile"><div class="value" id="k-corsi">–</div><div class="label">Corsi e titoli di studio</div></div>
+    <div class="tile" id="tile-pdu"><div class="value" id="k-pdu">–</div><div class="label">PDU</div><div class="hint">Professional Development Units</div></div>
   </div>
   <div class="grid-2" style="margin-top:12px">
-    <div class="card">
+    <div class="card" id="card-ore">
       <h3>Ore di formazione per anno</h3>
       <p class="sub">Tutte le attività di formazione pubblicate.</p>
       <div class="chart" id="chart-ore"></div>
     </div>
     <div class="card">
       <h3>Certificazioni e corsi</h3>
-      <p class="sub">Dal più recente.</p>
+      <p class="sub" id="sub-formazione">Dal più recente.</p>
       <div class="list" id="l-formazione"></div>
     </div>
   </div>
@@ -242,8 +259,26 @@
 <script>
 "use strict";
 const NS = "http://www.w3.org/2000/svg";
-const APPROCCI = ["Predittivo", "Agile", "Ibrido"];            // ordine fisso: colore = approccio
-const SLOT = { Predittivo: "--series-1", Agile: "--series-2", Ibrido: "--series-3" };
+const NON_INDICATO = "Non indicato";
+const APPROCCI = ["Predittivo", "Agile", "Ibrido", NON_INDICATO]; // ordine fisso: colore = approccio
+const SLOT = { Predittivo: "--series-1", Agile: "--series-2", Ibrido: "--series-3", [NON_INDICATO]: "--series-none" };
+const approccio = p => p.approccio || NON_INDICATO;
+const ORG_SLOTS = ["--series-1", "--series-2", "--series-3"];
+// Colore della cronologia: per approccio se almeno un progetto lo indica, altrimenti per organizzazione.
+// L'assegnazione è fissa (ordine alfabetico), quindi i filtri non ricolorano le barre.
+let colorKey = approccio, colorSlot = k => SLOT[k], colorValues = [];
+function setupColors() {
+  if (DATA.progetti.some(p => p.approccio)) {
+    colorKey = approccio; colorSlot = k => SLOT[k];
+    colorValues = APPROCCI.filter(a => DATA.progetti.some(p => approccio(p) === a));
+  } else {
+    const orgs = [...new Set(DATA.progetti.map(p => p.organizzazione || "Altro"))].sort((a, b) => a.localeCompare(b, "it"));
+    colorKey = p => p.organizzazione || "Altro";
+    colorSlot = k => orgs.indexOf(k) < ORG_SLOTS.length ? ORG_SLOTS[orgs.indexOf(k)] : "--series-none";
+    colorValues = orgs;
+  }
+}
+const fmtYear = s => s ? s.slice(0, 4) : "";
 const fmtPct = v => (v > 0 ? "+" : "") + (v * 100).toLocaleString("it-IT", { maximumFractionDigits: 1 }) + "%";
 const fmtNum = v => Number(v).toLocaleString("it-IT", { maximumFractionDigits: 1 });
 const fmtDate = s => s ? new Date(s + "T00:00:00").toLocaleDateString("it-IT", { year: "numeric", month: "short" }) : "–";
@@ -284,12 +319,13 @@ function bindTip(hit, value, label, extra) {
 // ---- filtri ----------------------------------------------------------------
 function filtered() {
   return DATA.progetti.filter(p =>
-    (!state.approccio || p.approccio === state.approccio) &&
+    (!state.approccio || approccio(p) === state.approccio) &&
     (!state.settore || p.settore === state.settore) &&
     (!state.stato || p.stato === state.stato));
 }
 function fillSelect(id, values, key) {
   const sel = document.getElementById(id);
+  sel.closest("label").hidden = values.length < 2;   // un filtro con una sola scelta non serve
   sel.replaceChildren(el("option", { value: "" }, "Tutti"));
   values.forEach(v => sel.append(el("option", { value: v }, v)));
   sel.addEventListener("change", () => { state[key] = sel.value; render(); });
@@ -308,7 +344,8 @@ function gantt(container, rows) {
   if (!rows.length) { container.append(el("div", { class: "empty" }, "Nessun progetto con questi filtri.")); return; }
   const W = width(container), labelW = Math.min(240, W * 0.38), rowH = 30, top = 4, axisH = 26;
   const H = top + rows.length * rowH + axisH;
-  const end = p => p.data_fine_effettiva || p.data_fine_prevista;
+  const oggi = new Date().toISOString().slice(0, 10);
+  const end = p => p.data_fine_effettiva || p.data_fine_prevista || oggi;
   const t0 = new Date(Math.min(...rows.map(p => +new Date(p.data_inizio))));
   const t1 = new Date(Math.max(...rows.map(p => +new Date(end(p)))));
   const y0 = t0.getFullYear(), y1 = t1.getFullYear() + 1;
@@ -321,7 +358,7 @@ function gantt(container, rows) {
     if (y < y1) svg.append(el("svg:text", { x: gx + 4, y: H - 8, "font-size": 12, fill: css("--text-muted") }, String(y)));
   }
   rows.forEach((p, i) => {
-    const cy = top + i * rowH + rowH / 2, color = css(SLOT[p.approccio]);
+    const cy = top + i * rowH + rowH / 2, color = css(colorSlot(colorKey(p)));
     const name = fit(p.nome, labelW - 14);
     svg.append(el("svg:text", { x: labelW - 10, y: cy + 4, "text-anchor": "end", "font-size": 12.5, fill: css("--text-secondary") }, name));
     const xs = x(p.data_inizio), xe = Math.max(xs + 6, x(end(p)));
@@ -330,8 +367,10 @@ function gantt(container, rows) {
     const bar = el("svg:rect", { class: "mark", x: xs, y: cy - 7, width: xe - xs, height: 14, rx: 4,
       fill: done ? color : css("--surface"), stroke: color, "stroke-width": done ? 0 : 2 });
     svg.append(hit, bar);
-    bindTip(hit, `${fmtDate(p.data_inizio)} – ${fmtDate(end(p))}`, p.nome,
-      `${p.approccio} · ${p.stato} · ${p.ruolo}`);
+    const fine = p.data_fine_effettiva || p.data_fine_prevista;
+    bindTip(hit, `${fmtDate(p.data_inizio)} – ${fine ? fmtDate(fine) : "in corso"}`, p.nome,
+      [p.organizzazione, p.ruolo, p.stato, p.approccio ? `approccio ${p.approccio.toLowerCase()}` : null,
+       p.date_indicative ? "date indicative: periodo del ruolo" : null].filter(Boolean).join(" · "));
   });
   container.append(svg);
 }
@@ -425,21 +464,39 @@ function table(id, columns, rows) {
 
 function renderStatic() {
   const f = DATA.formazione;
-  document.getElementById("k-ore").textContent = fmtNum(f.reduce((s, x) => s + (x.ore || 0), 0));
+  const conOre = f.filter(x => x.ore), conPdu = f.filter(x => x.pdu);
+  document.getElementById("k-ore").textContent = fmtNum(conOre.reduce((s, x) => s + x.ore, 0));
   document.getElementById("k-cert").textContent = f.filter(x => x.tipo === "Certificazione").length;
-  document.getElementById("k-pdu").textContent = fmtNum(f.reduce((s, x) => s + (x.pdu || 0), 0));
+  document.getElementById("k-corsi").textContent = f.filter(x => x.tipo !== "Certificazione").length;
+  document.getElementById("k-pdu").textContent = fmtNum(conPdu.reduce((s, x) => s + x.pdu, 0));
+  // Si mostra solo ciò che è documentato: niente ore o PDU a zero se non sono indicate.
+  document.getElementById("tile-ore").hidden = !conOre.length;
+  document.getElementById("tile-pdu").hidden = !conPdu.length;
+  document.getElementById("card-ore").hidden = !conOre.some(x => x.data_conseguimento);
   const perAnno = {};
-  f.forEach(x => { const y = x.data_conseguimento.slice(0, 4); perAnno[y] = (perAnno[y] || 0) + (x.ore || 0); });
+  conOre.filter(x => x.data_conseguimento).forEach(x => { const y = x.data_conseguimento.slice(0, 4); perAnno[y] = (perAnno[y] || 0) + x.ore; });
   vbar(document.getElementById("chart-ore"), Object.keys(perAnno).sort().map(y => ({ label: y, value: perAnno[y] })));
+  document.getElementById("sub-formazione").textContent = f.some(x => !x.data_conseguimento) ? "Dal più recente; in fondo le voci senza data." : "Dal più recente.";
 
   const lf = document.getElementById("l-formazione");
-  lf.replaceChildren(...[...f].reverse().map(x => {
+  const ordinata = [...f].sort((a, b) => (b.data_conseguimento || "").localeCompare(a.data_conseguimento || "") || a.titolo.localeCompare(b.titolo, "it"));
+  const datate = ordinata.filter(x => x.data_conseguimento), senza = ordinata.filter(x => !x.data_conseguimento);
+  lf.replaceChildren(...[...datate, ...senza].map(x => {
     const item = el("div", { class: "item" });
     const h = el("h4");
     if (x.credenziale_url && /^https:\/\//.test(x.credenziale_url)) h.append(el("a", { href: x.credenziale_url, rel: "noopener" }, x.titolo));
     else h.textContent = x.titolo;
-    item.append(h, el("div", { class: "meta" }, `${x.tipo} · ${x.ente} · ${fmtDate(x.data_conseguimento)} · ${fmtNum(x.ore)} ore`));
+    item.append(h, el("div", { class: "meta" }, [x.tipo, x.ente, fmtYear(x.data_conseguimento), x.ore ? `${fmtNum(x.ore)} ore` : null].filter(Boolean).join(" · ")));
     return item;
+  }));
+
+  const aree = [...new Set(DATA.competenze.map(c => c.area))];
+  document.getElementById("l-competenze").replaceChildren(...aree.map(a => {
+    const box = el("div", { class: "area" });
+    const chips = el("div", { class: "chips" });
+    DATA.competenze.filter(c => c.area === a).forEach(c => chips.append(el("span", { class: "chip" }, c.nome)));
+    box.append(el("h4", {}, a), chips);
+    return box;
   }));
 
   const lc = document.getElementById("l-casi");
@@ -459,11 +516,18 @@ function renderStatic() {
 function render() {
   const rows = filtered();
   const completati = rows.filter(p => p.stato === "Completato");
-  const puntuali = completati.filter(p => p.data_fine_effettiva && p.data_fine_effettiva <= p.data_fine_prevista);
+  // Puntualità solo su date reali (non indicative) con fine prevista ed effettiva.
+  const misurabili = completati.filter(p => !p.date_indicative && p.data_fine_prevista && p.data_fine_effettiva);
+  const puntuali = misurabili.filter(p => p.data_fine_effettiva <= p.data_fine_prevista);
   document.getElementById("k-progetti").textContent = rows.length;
   document.getElementById("k-completati").textContent = completati.length;
   document.getElementById("k-puntualita").textContent =
-    completati.length ? Math.round(100 * puntuali.length / completati.length) + "%" : "–";
+    misurabili.length ? Math.round(100 * puntuali.length / misurabili.length) + "%" : "–";
+  document.getElementById("tile-puntualita").hidden = !DATA.progetti.some(p => !p.date_indicative && p.data_fine_prevista && p.data_fine_effettiva);
+  document.getElementById("grid-scostamenti").hidden = !DATA.progetti.some(p => p.scostamento_tempi_pct !== null || p.scostamento_costi_pct !== null);
+  document.getElementById("sub-gantt").textContent = rows.some(p => p.date_indicative)
+    ? "Dall'inizio alla fine di ogni progetto. Dove le date non sono note si usa il periodo del ruolo (date indicative); le barre a contorno sono attività in corso."
+    : "Dall'inizio alla fine effettiva (o prevista, se il progetto non è concluso).";
   document.getElementById("k-settori").textContent = new Set(rows.map(p => p.settore)).size;
 
   gantt(document.getElementById("chart-gantt"), rows);
@@ -479,12 +543,14 @@ function render() {
 
   table("t-progetti", [
     { label: "Progetto", get: p => p.nome },
+    { label: "Organizzazione", get: p => p.organizzazione || "–" },
     { label: "Settore", get: p => p.settore },
-    { label: "Approccio", get: p => p.approccio },
+    { label: "Approccio", get: p => approccio(p) },
     { label: "Ruolo", get: p => p.ruolo },
     { label: "Stato", get: p => p.stato },
     { label: "Inizio", get: p => fmtDate(p.data_inizio) },
-    { label: "Fine", get: p => fmtDate(p.data_fine_effettiva || p.data_fine_prevista) },
+    { label: "Fine", get: p => (p.data_fine_effettiva || p.data_fine_prevista) ? fmtDate(p.data_fine_effettiva || p.data_fine_prevista) : "in corso" },
+    { label: "Date", get: p => p.date_indicative ? "indicative" : "effettive" },
     { label: "Scost. tempi", num: true, get: p => p.stato === "Completato" && p.scostamento_tempi_pct !== null ? fmtPct(p.scostamento_tempi_pct) : "–" },
     { label: "Scost. costi", num: true, get: p => p.scostamento_costi_pct !== null ? fmtPct(p.scostamento_costi_pct) : "–" },
   ], rows);
@@ -492,10 +558,9 @@ function render() {
 
 function legend() {
   const lg = document.getElementById("legend-gantt");
-  const presenti = APPROCCI.filter(a => DATA.progetti.some(p => p.approccio === a));
-  lg.replaceChildren(...presenti.map(a => {
+  lg.replaceChildren(...colorValues.map(a => {
     const s = el("span"); const sw = el("i", { class: "swatch" });
-    sw.style.background = `var(${SLOT[a]})`; s.append(sw, document.createTextNode(a)); return s;
+    sw.style.background = `var(${colorSlot(a)})`; s.append(sw, document.createTextNode(a)); return s;
   }));
   const s = el("span"); const sw = el("i", { class: "swatch outline" });
   sw.style.borderColor = "var(--text-muted)"; s.append(sw, document.createTextNode("contorno = non ancora concluso"));
@@ -510,6 +575,7 @@ async function main() {
   DATA = data;
   if (profilo.nome) { document.getElementById("titolo").textContent = profilo.nome; document.title = `${profilo.nome} · Portfolio`; }
   if (profilo.titolo) document.getElementById("sottotitolo").textContent = profilo.titolo;
+  if (profilo.sintesi) { const si = document.getElementById("sintesi"); si.textContent = profilo.sintesi; si.hidden = false; }
   const links = document.getElementById("links");
   (profilo.link || []).filter(l => /^https:\/\//.test(l.url)).forEach(l => links.append(el("a", { href: l.url, rel: "noopener" }, l.testo)));
   document.getElementById("banner").hidden = !DATA.contiene_esempi;
@@ -518,14 +584,14 @@ async function main() {
     "Generato da SQL Server tramite Metabase: sono pubblicati solo i dati contrassegnati come pubblicabili e nessun importo economico.";
 
   const uniq = k => [...new Set(DATA.progetti.map(p => p[k]))].sort((a, b) => a.localeCompare(b, "it"));
-  fillSelect("f-approccio", APPROCCI.filter(a => DATA.progetti.some(p => p.approccio === a)), "approccio");
+  fillSelect("f-approccio", APPROCCI.filter(a => DATA.progetti.some(p => approccio(p) === a)), "approccio");
   fillSelect("f-settore", uniq("settore"), "settore");
   fillSelect("f-stato", uniq("stato"), "stato");
   document.getElementById("f-reset").addEventListener("click", () => {
     Object.keys(state).forEach(k => { state[k] = ""; document.getElementById("f-" + k).value = ""; });
     render();
   });
-  legend(); renderStatic(); render();
+  setupColors(); legend(); renderStatic(); render();
   let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(() => { renderStatic(); render(); }, 150); });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { renderStatic(); render(); });
 }

@@ -1,8 +1,9 @@
 {
-  "nome": "Nome Cognome",
-  "titolo": "Project Manager e Business Analyst · Progetti, competenze e formazione",
+  "nome": "Francesco Lucignano",
+  "titolo": "Head of PMO · ICT Manager · Business Analyst",
+  "sintesi": "Head of PMO con oltre 16 anni di esperienza professionale, di cui 7 in ruoli gestionali su 3 settori industriali. Applico gli standard PMI (PMBOK) con approccio predittivo, agile e ibrido, unendo business analysis e controllo di gestione. Presidio l'integrazione dell'intelligenza artificiale nei processi aziendali e la conformità normativa associata (AI Act, NIS2).",
   "link": [
-    { "testo": "LinkedIn", "url": "https://www.linkedin.com/in/il-tuo-profilo/" },
+    { "testo": "LinkedIn", "url": "https://www.linkedin.com/in/francesco-lucignano84/" },
     { "testo": "GitHub", "url": "https://github.com/FrankLucs84" }
   ]
 }

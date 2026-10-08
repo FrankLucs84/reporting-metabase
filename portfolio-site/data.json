@@ -1,336 +1,648 @@
 {
   "progetti": [
     {
-      "codice": "ESEMPIO-01",
-      "nome": "[Esempio] Migrazione ERP",
-      "settore": "Manifattura",
-      "approccio": "Predittivo",
-      "ruolo": "Project Manager",
+      "codice": "MLT-AMM-01",
+      "nome": "Archiviazione digitale sostitutiva e fatturazione elettronica",
+      "organizzazione": "Multiesse S.r.l.",
+      "settore": "Grande Distribuzione Organizzata",
+      "approccio": null,
+      "ruolo": "Amministrativo-contabile",
       "stato": "Completato",
-      "data_inizio": "2023-02-01",
-      "data_fine_prevista": "2023-10-31",
-      "data_fine_effettiva": "2023-12-15",
-      "scostamento_tempi_pct": 0.165441176470588,
-      "scostamento_costi_pct": 0.08888888888888888,
-      "soddisfazione_cliente": 4,
-      "descrizione": "Passaggio al nuovo gestionale con migrazione dati e formazione utenti."
-    },
-    {
-      "codice": "ESEMPIO-02",
-      "nome": "[Esempio] Portale clienti",
-      "settore": "Servizi",
-      "approccio": "Agile",
-      "ruolo": "Product Owner",
-      "stato": "Completato",
-      "data_inizio": "2023-05-15",
-      "data_fine_prevista": "2023-12-20",
-      "data_fine_effettiva": "2023-12-18",
-      "scostamento_tempi_pct": -0.009132420091324,
-      "scostamento_costi_pct": -0.04210526315789473,
-      "soddisfazione_cliente": 5,
-      "descrizione": "Portale self-service sviluppato in sprint di due settimane."
-    },
-    {
-      "codice": "ESEMPIO-03",
-      "nome": "[Esempio] Audit sicurezza IT",
-      "settore": "IT",
-      "approccio": "Predittivo",
-      "ruolo": "Project Manager",
-      "stato": "Completato",
-      "data_inizio": "2024-01-10",
-      "data_fine_prevista": "2024-04-30",
-      "data_fine_effettiva": "2024-05-20",
-      "scostamento_tempi_pct": 0.18018018018018,
-      "scostamento_costi_pct": 0.0875,
-      "soddisfazione_cliente": 4,
-      "descrizione": "Assessment, piano di rimedio e verifica di chiusura."
-    },
-    {
-      "codice": "ESEMPIO-04",
-      "nome": "[Esempio] Reporting direzionale",
-      "settore": "Manifattura",
-      "approccio": "Ibrido",
-      "ruolo": "Business Analyst",
-      "stato": "Completato",
-      "data_inizio": "2024-03-01",
-      "data_fine_prevista": "2024-07-31",
-      "data_fine_effettiva": "2024-07-25",
-      "scostamento_tempi_pct": -0.039473684210526,
-      "scostamento_costi_pct": -0.07333333333333333,
-      "soddisfazione_cliente": 5,
-      "descrizione": "Cruscotto KPI per la direzione con modello dati a stella."
-    },
-    {
-      "codice": "ESEMPIO-05",
-      "nome": "[Esempio] Directory aziendale AD/LDAP",
-      "settore": "IT",
-      "approccio": "Predittivo",
-      "ruolo": "Project Manager",
-      "stato": "Completato",
-      "data_inizio": "2024-06-01",
-      "data_fine_prevista": "2024-11-30",
-      "data_fine_effettiva": "2025-01-20",
-      "scostamento_tempi_pct": 0.28021978021978,
-      "scostamento_costi_pct": 0.1,
-      "soddisfazione_cliente": 3,
-      "descrizione": "Consolidamento delle identità e delle policy di accesso."
-    },
-    {
-      "codice": "ESEMPIO-06",
-      "nome": "[Esempio] Automazione flussi dati",
-      "settore": "Servizi",
-      "approccio": "Agile",
-      "ruolo": "Business Analyst",
-      "stato": "Completato",
-      "data_inizio": "2024-09-01",
-      "data_fine_prevista": "2025-02-28",
-      "data_fine_effettiva": "2025-02-28",
-      "scostamento_tempi_pct": 0.0,
-      "scostamento_costi_pct": -0.01777777777777777,
-      "soddisfazione_cliente": 4,
-      "descrizione": "Pipeline di integrazione dati con controlli di qualità."
-    },
-    {
-      "codice": "ESEMPIO-07",
-      "nome": "[Esempio] Assistente AI per il supporto",
-      "settore": "Servizi",
-      "approccio": "Ibrido",
-      "ruolo": "Project Manager",
-      "stato": "In corso",
-      "data_inizio": "2025-03-01",
-      "data_fine_prevista": "2025-12-31",
-      "data_fine_effettiva": null,
+      "data_inizio": "2015-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2017-03-31",
+      "date_indicative": true,
       "scostamento_tempi_pct": null,
       "scostamento_costi_pct": null,
       "soddisfazione_cliente": null,
-      "descrizione": "Pilota di assistente conversazionale secondo il metodo CPMAI."
+      "descrizione": "Avvio dei progetti con registrazione automatica in contabilità."
+    },
+    {
+      "codice": "MLT-COM-01",
+      "nome": "Sito e-commerce durante l'emergenza pandemica",
+      "organizzazione": "Multiesse S.r.l.",
+      "settore": "Grande Distribuzione Organizzata",
+      "approccio": null,
+      "ruolo": "Commerciale e sviluppo progetti",
+      "stato": "Completato",
+      "data_inizio": "2017-04-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2022-08-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Avvio del sito fino a 300 consegne al giorno; cambio del gateway di pagamento e gestione del catalogo."
+    },
+    {
+      "codice": "MLT-BC-01",
+      "nome": "Reportistica direzionale settimanale",
+      "organizzazione": "Multiesse S.r.l.",
+      "settore": "Grande Distribuzione Organizzata",
+      "approccio": null,
+      "ruolo": "Business Controller",
+      "stato": "Completato",
+      "data_inizio": "2019-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2022-08-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Reporting su marginalità, costi operativi e rotazione di magazzino per 14 punti vendita."
+    },
+    {
+      "codice": "MLT-BC-02",
+      "nome": "Automazione dell'elaborazione dei dati di reporting",
+      "organizzazione": "Multiesse S.r.l.",
+      "settore": "Grande Distribuzione Organizzata",
+      "approccio": null,
+      "ruolo": "Business Controller",
+      "stato": "Completato",
+      "data_inizio": "2019-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2022-08-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Strumenti che hanno ridotto i tempi di chiusura del reporting da mesi a giorni."
+    },
+    {
+      "codice": "MLT-BC-03",
+      "nome": "Laboratorio di produzione (centro cottura) integrato con l'ERP",
+      "organizzazione": "Multiesse S.r.l.",
+      "settore": "Grande Distribuzione Organizzata",
+      "approccio": null,
+      "ruolo": "Business Controller",
+      "stato": "Completato",
+      "data_inizio": "2019-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2022-08-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Avvio e gestione del laboratorio, con integrazione software tra i sistemi di lottizzazione e l'ERP."
+    },
+    {
+      "codice": "MAU-PM-01",
+      "nome": "ERP SAP per i processi di magazzino e CEDI",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2022-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2025-12-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Analisi funzionale e configurazione: mappatura dei flussi, definizione dei requisiti, collaudo e avviamento in esercizio."
+    },
+    {
+      "codice": "MAU-PM-02",
+      "nome": "Piattaforma di ticketing HelpdeskAdvanced su tutti i dipartimenti",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2022-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2025-12-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Implementazione e gestione della piattaforma HDA in tutti i dipartimenti aziendali."
+    },
+    {
+      "codice": "MAU-PM-03",
+      "nome": "Cruscotti KPI sui livelli di servizio HDA",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2022-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2025-12-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Query SQL e cruscotti sulla base dati HDA per il monitoraggio dei livelli di servizio e dei carichi di lavoro."
+    },
+    {
+      "codice": "MAU-PM-04",
+      "nome": "Analisi dei costi logistici e delle anomalie di fatturazione",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2022-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2025-12-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Strumenti di analisi in Power BI e KNIME per il controllo dei costi logistici e l'individuazione di anomalie di fatturazione."
+    },
+    {
+      "codice": "MAU-PM-05",
+      "nome": "Change management e formazione utenti su oltre 45 filiali",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2022-09-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": "2025-12-31",
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Mediazione dei conflitti organizzativi nell'adozione dei nuovi sistemi e formazione diretta degli utenti chiave."
+    },
+    {
+      "codice": "MAU-PMO-01",
+      "nome": "Modello di governance di progetto secondo gli standard PMI",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Head of PMO",
+      "stato": "In corso",
+      "data_inizio": "2026-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": null,
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Project charter, WBS, RAID log, registro dei rischi e reportistica periodica per la direzione, sul portafoglio ICT del gruppo."
+    },
+    {
+      "codice": "MAU-PMO-02",
+      "nome": "Migrazione di HelpdeskAdvanced alla versione 11",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Head of PMO",
+      "stato": "In corso",
+      "data_inizio": "2026-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": null,
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Ricostruzione dell'architettura applicativa, analisi di impatto e pianificazione del porting."
+    },
+    {
+      "codice": "MAU-PMO-03",
+      "nome": "Integrazione dell'intelligenza artificiale nei processi aziendali",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Head of PMO",
+      "stato": "In corso",
+      "data_inizio": "2026-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": null,
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Avvio dell'integrazione di strumenti di IA, con presidio degli obblighi di trasparenza dell'art. 50 dell'AI Act."
+    },
+    {
+      "codice": "MAU-PMO-04",
+      "nome": "Adeguamento alla direttiva NIS2",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Head of PMO",
+      "stato": "In corso",
+      "data_inizio": "2026-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": null,
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Analisi del perimetro, gap analysis e piano di remediation (D.lgs. 138/2024)."
+    },
+    {
+      "codice": "MAU-PMO-05",
+      "nome": "Modello di collaborazione uomo-IA (Human in the Loop)",
+      "organizzazione": "Maurelli Group S.p.A.",
+      "settore": "Metalmeccanico",
+      "approccio": null,
+      "ruolo": "Head of PMO",
+      "stato": "In corso",
+      "data_inizio": "2026-01-01",
+      "data_fine_prevista": null,
+      "data_fine_effettiva": null,
+      "date_indicative": true,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Modello strutturato per i team di progetto, con procedure di verifica e tracciabilità degli output."
     }
   ],
   "competenze": [
     {
-      "nome": "Analisi dei requisiti",
+      "nome": "Analisi funzionale e gap analysis",
       "area": "Business Analysis",
-      "livello": 5
+      "livello": null
     },
     {
-      "nome": "Modellazione dei processi",
+      "nome": "Collaudo e UAT",
       "area": "Business Analysis",
-      "livello": 4
+      "livello": null
     },
     {
-      "nome": "Metabase",
-      "area": "Dati e Reporting",
-      "livello": 3
+      "nome": "Documentazione tecnico-funzionale",
+      "area": "Business Analysis",
+      "livello": null
     },
     {
-      "nome": "Power BI / DAX",
-      "area": "Dati e Reporting",
-      "livello": 4
+      "nome": "Mappatura e reingegnerizzazione dei processi",
+      "area": "Business Analysis",
+      "livello": null
+    },
+    {
+      "nome": "Raccolta e formalizzazione dei requisiti",
+      "area": "Business Analysis",
+      "livello": null
+    },
+    {
+      "nome": "Change management",
+      "area": "Competenze trasversali",
+      "livello": null
+    },
+    {
+      "nome": "Formazione degli utenti",
+      "area": "Competenze trasversali",
+      "livello": null
+    },
+    {
+      "nome": "Mediazione dei conflitti organizzativi",
+      "area": "Competenze trasversali",
+      "livello": null
+    },
+    {
+      "nome": "Analisi di magazzino e logistica",
+      "area": "Dati e reporting",
+      "livello": null
+    },
+    {
+      "nome": "KNIME Analytics Platform",
+      "area": "Dati e reporting",
+      "livello": null
+    },
+    {
+      "nome": "KPI e cruscotti direzionali",
+      "area": "Dati e reporting",
+      "livello": null
+    },
+    {
+      "nome": "Power BI",
+      "area": "Dati e reporting",
+      "livello": null
     },
     {
       "nome": "SQL",
-      "area": "Dati e Reporting",
-      "livello": 4
+      "area": "Dati e reporting",
+      "livello": null
     },
     {
-      "nome": "Gestione progetti AI (CPMAI)",
-      "area": "Intelligenza Artificiale",
-      "livello": 3
+      "nome": "E-commerce",
+      "area": "ICT ed ERP",
+      "livello": null
     },
     {
-      "nome": "Prompt engineering",
-      "area": "Intelligenza Artificiale",
-      "livello": 3
+      "nome": "Fatturazione elettronica e conservazione digitale",
+      "area": "ICT ed ERP",
+      "livello": null
     },
     {
-      "nome": "Gestione dei rischi",
+      "nome": "HelpdeskAdvanced (HDA)",
+      "area": "ICT ed ERP",
+      "livello": null
+    },
+    {
+      "nome": "Integrazione tra sistemi",
+      "area": "ICT ed ERP",
+      "livello": null
+    },
+    {
+      "nome": "Migrazioni di piattaforma",
+      "area": "ICT ed ERP",
+      "livello": null
+    },
+    {
+      "nome": "SAP",
+      "area": "ICT ed ERP",
+      "livello": null
+    },
+    {
+      "nome": "AI Act (Reg. UE 2024/1689)",
+      "area": "Intelligenza artificiale e conformità",
+      "livello": null
+    },
+    {
+      "nome": "Casi d'uso e adozione dell'IA",
+      "area": "Intelligenza artificiale e conformità",
+      "livello": null
+    },
+    {
+      "nome": "NIS2 (D.lgs. 138/2024)",
+      "area": "Intelligenza artificiale e conformità",
+      "livello": null
+    },
+    {
+      "nome": "Agile e Scrum",
       "area": "Project Management",
-      "livello": 4
+      "livello": null
     },
     {
-      "nome": "Gestione stakeholder",
+      "nome": "Change control",
       "area": "Project Management",
-      "livello": 4
+      "livello": null
     },
     {
-      "nome": "Pianificazione e WBS",
+      "nome": "Governance di portafoglio e PMO",
       "area": "Project Management",
-      "livello": 5
+      "livello": null
     },
     {
-      "nome": "Scrum / Agile",
+      "nome": "Pianificazione e schedulazione",
       "area": "Project Management",
-      "livello": 4
+      "livello": null
     },
     {
-      "nome": "MS Project / Jira",
-      "area": "Strumenti",
-      "livello": 4
+      "nome": "Project charter e WBS",
+      "area": "Project Management",
+      "livello": null
+    },
+    {
+      "nome": "Risk management e RAID log",
+      "area": "Project Management",
+      "livello": null
+    },
+    {
+      "nome": "Stakeholder management",
+      "area": "Project Management",
+      "livello": null
+    },
+    {
+      "nome": "Python",
+      "area": "Sviluppo",
+      "livello": null
     }
   ],
   "progetto_competenze": [
     {
-      "codice": "ESEMPIO-01",
-      "competenza": "Pianificazione e WBS"
+      "codice": "MAU-PMO-01",
+      "competenza": "Governance di portafoglio e PMO"
     },
     {
-      "codice": "ESEMPIO-01",
-      "competenza": "Gestione dei rischi"
+      "codice": "MAU-PMO-01",
+      "competenza": "Project charter e WBS"
     },
     {
-      "codice": "ESEMPIO-01",
-      "competenza": "Gestione stakeholder"
+      "codice": "MAU-PMO-01",
+      "competenza": "Risk management e RAID log"
     },
     {
-      "codice": "ESEMPIO-01",
-      "competenza": "MS Project / Jira"
+      "codice": "MAU-PMO-01",
+      "competenza": "Stakeholder management"
     },
     {
-      "codice": "ESEMPIO-02",
-      "competenza": "Scrum / Agile"
+      "codice": "MAU-PMO-02",
+      "competenza": "Pianificazione e schedulazione"
     },
     {
-      "codice": "ESEMPIO-02",
-      "competenza": "Analisi dei requisiti"
+      "codice": "MAU-PMO-02",
+      "competenza": "Analisi funzionale e gap analysis"
     },
     {
-      "codice": "ESEMPIO-02",
-      "competenza": "MS Project / Jira"
+      "codice": "MAU-PMO-02",
+      "competenza": "HelpdeskAdvanced (HDA)"
     },
     {
-      "codice": "ESEMPIO-03",
-      "competenza": "Pianificazione e WBS"
+      "codice": "MAU-PMO-02",
+      "competenza": "Migrazioni di piattaforma"
     },
     {
-      "codice": "ESEMPIO-03",
-      "competenza": "Gestione dei rischi"
+      "codice": "MAU-PMO-03",
+      "competenza": "Casi d'uso e adozione dell'IA"
     },
     {
-      "codice": "ESEMPIO-04",
-      "competenza": "Analisi dei requisiti"
+      "codice": "MAU-PMO-03",
+      "competenza": "AI Act (Reg. UE 2024/1689)"
     },
     {
-      "codice": "ESEMPIO-04",
-      "competenza": "Modellazione dei processi"
+      "codice": "MAU-PMO-04",
+      "competenza": "Analisi funzionale e gap analysis"
     },
     {
-      "codice": "ESEMPIO-04",
+      "codice": "MAU-PMO-04",
+      "competenza": "NIS2 (D.lgs. 138/2024)"
+    },
+    {
+      "codice": "MAU-PMO-05",
+      "competenza": "Mappatura e reingegnerizzazione dei processi"
+    },
+    {
+      "codice": "MAU-PMO-05",
+      "competenza": "Casi d'uso e adozione dell'IA"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "Raccolta e formalizzazione dei requisiti"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "Analisi funzionale e gap analysis"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "Mappatura e reingegnerizzazione dei processi"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "Collaudo e UAT"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "SAP"
+    },
+    {
+      "codice": "MAU-PM-01",
+      "competenza": "Analisi di magazzino e logistica"
+    },
+    {
+      "codice": "MAU-PM-02",
+      "competenza": "HelpdeskAdvanced (HDA)"
+    },
+    {
+      "codice": "MAU-PM-02",
+      "competenza": "Integrazione tra sistemi"
+    },
+    {
+      "codice": "MAU-PM-03",
+      "competenza": "HelpdeskAdvanced (HDA)"
+    },
+    {
+      "codice": "MAU-PM-03",
       "competenza": "SQL"
     },
     {
-      "codice": "ESEMPIO-04",
-      "competenza": "Power BI / DAX"
+      "codice": "MAU-PM-03",
+      "competenza": "KPI e cruscotti direzionali"
     },
     {
-      "codice": "ESEMPIO-05",
-      "competenza": "Pianificazione e WBS"
+      "codice": "MAU-PM-04",
+      "competenza": "Power BI"
     },
     {
-      "codice": "ESEMPIO-05",
-      "competenza": "Gestione dei rischi"
+      "codice": "MAU-PM-04",
+      "competenza": "KNIME Analytics Platform"
     },
     {
-      "codice": "ESEMPIO-05",
-      "competenza": "Gestione stakeholder"
+      "codice": "MAU-PM-04",
+      "competenza": "Analisi di magazzino e logistica"
     },
     {
-      "codice": "ESEMPIO-06",
-      "competenza": "Scrum / Agile"
+      "codice": "MAU-PM-05",
+      "competenza": "Stakeholder management"
     },
     {
-      "codice": "ESEMPIO-06",
-      "competenza": "Modellazione dei processi"
+      "codice": "MAU-PM-05",
+      "competenza": "Change management"
     },
     {
-      "codice": "ESEMPIO-06",
-      "competenza": "SQL"
+      "codice": "MAU-PM-05",
+      "competenza": "Formazione degli utenti"
     },
     {
-      "codice": "ESEMPIO-07",
-      "competenza": "Gestione stakeholder"
+      "codice": "MAU-PM-05",
+      "competenza": "Mediazione dei conflitti organizzativi"
     },
     {
-      "codice": "ESEMPIO-07",
-      "competenza": "Scrum / Agile"
+      "codice": "MLT-BC-01",
+      "competenza": "KPI e cruscotti direzionali"
     },
     {
-      "codice": "ESEMPIO-07",
-      "competenza": "Gestione progetti AI (CPMAI)"
+      "codice": "MLT-BC-01",
+      "competenza": "Analisi di magazzino e logistica"
     },
     {
-      "codice": "ESEMPIO-07",
-      "competenza": "Prompt engineering"
+      "codice": "MLT-BC-02",
+      "competenza": "Mappatura e reingegnerizzazione dei processi"
+    },
+    {
+      "codice": "MLT-BC-02",
+      "competenza": "KPI e cruscotti direzionali"
+    },
+    {
+      "codice": "MLT-BC-03",
+      "competenza": "Integrazione tra sistemi"
+    },
+    {
+      "codice": "MLT-COM-01",
+      "competenza": "Integrazione tra sistemi"
+    },
+    {
+      "codice": "MLT-COM-01",
+      "competenza": "E-commerce"
+    },
+    {
+      "codice": "MLT-AMM-01",
+      "competenza": "Mappatura e reingegnerizzazione dei processi"
+    },
+    {
+      "codice": "MLT-AMM-01",
+      "competenza": "Fatturazione elettronica e conservazione digitale"
     }
   ],
   "formazione": [
     {
-      "titolo": "[Esempio] Certificazione di project management",
-      "ente": "Ente certificatore",
-      "tipo": "Certificazione",
-      "area": "Project Management",
-      "data_conseguimento": "2023-06-20",
-      "ore": 35.0,
-      "pdu": 35.0,
-      "credenziale_url": null
-    },
-    {
-      "titolo": "[Esempio] Corso Agile e Scrum",
-      "ente": "Ente formativo",
-      "tipo": "Corso",
-      "area": "Project Management",
-      "data_conseguimento": "2023-11-10",
-      "ore": 16.0,
-      "pdu": 16.0,
-      "credenziale_url": null
-    },
-    {
-      "titolo": "[Esempio] SQL per l'analisi dati",
-      "ente": "Ente formativo",
-      "tipo": "Corso",
-      "area": "Dati e Reporting",
-      "data_conseguimento": "2024-02-15",
-      "ore": 24.0,
+      "titolo": "Laurea in Economia Aziendale",
+      "ente": "Università degli Studi di Napoli Federico II",
+      "tipo": "Titolo di studio",
+      "area": "Competenze trasversali",
+      "data_conseguimento": "2010-12-31",
+      "ore": null,
       "pdu": null,
       "credenziale_url": null
     },
     {
-      "titolo": "[Esempio] Business analysis: requisiti",
-      "ente": "Ente formativo",
+      "titolo": "Agile Project Management",
+      "ente": "Alison",
       "tipo": "Corso",
-      "area": "Business Analysis",
-      "data_conseguimento": "2024-05-08",
-      "ore": 21.0,
-      "pdu": 21.0,
-      "credenziale_url": null
-    },
-    {
-      "titolo": "[Esempio] Webinar AI nei progetti",
-      "ente": "Associazione",
-      "tipo": "Webinar",
-      "area": "Intelligenza Artificiale",
-      "data_conseguimento": "2024-10-03",
-      "ore": 2.0,
-      "pdu": 2.0,
-      "credenziale_url": null
-    },
-    {
-      "titolo": "[Esempio] Gestione di progetti AI",
-      "ente": "Ente formativo",
-      "tipo": "Certificazione",
-      "area": "Intelligenza Artificiale",
-      "data_conseguimento": "2025-04-18",
-      "ore": 30.0,
-      "pdu": 30.0,
-      "credenziale_url": null
-    },
-    {
-      "titolo": "[Esempio] Convegno annuale PM",
-      "ente": "Associazione",
-      "tipo": "Evento",
       "area": "Project Management",
-      "data_conseguimento": "2025-10-24",
-      "ore": 8.0,
-      "pdu": 8.0,
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "Certificazione PAT per HelpdeskAdvanced (HDA)",
+      "ente": "HelpdeskAdvanced",
+      "tipo": "Certificazione",
+      "area": "ICT ed ERP",
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "Google Data Analytics: Foundations - Data, Data, Everywhere",
+      "ente": "Coursera",
+      "tipo": "Corso",
+      "area": "Dati e reporting",
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "ISIPM-Base®",
+      "ente": "Istituto Italiano di Project Management",
+      "tipo": "Certificazione",
+      "area": "Project Management",
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "KNIME Analytics Platform - Basic Proficiency",
+      "ente": "KNIME",
+      "tipo": "Certificazione",
+      "area": "Dati e reporting",
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "Microsoft PL-300 Power BI Data Analyst - percorso di preparazione all'esame",
+      "ente": "Coursera",
+      "tipo": "Corso",
+      "area": "Dati e reporting",
+      "data_conseguimento": null,
+      "ore": null,
+      "pdu": null,
       "credenziale_url": null
     }
   ],
@@ -342,8 +654,16 @@
       "data_pubblicazione": "2026-10-08",
       "link_url": "https://github.com/FrankLucs84/reporting-metabase",
       "descrizione": "Report gestito come codice: KPI, andamento, Pareto e classificazione ABC dei clienti."
+    },
+    {
+      "titolo": "Portfolio professionale",
+      "dataset": "PortfolioLab (progetti dal CV)",
+      "strumenti": "SQL Server, Metabase, GitHub Pages",
+      "data_pubblicazione": "2026-10-08",
+      "link_url": "https://github.com/FrankLucs84/reporting-metabase",
+      "descrizione": "Questa pagina: dati in SQL Server, report in Metabase, pubblicazione automatica dei soli dati pubblicabili."
     }
   ],
-  "contiene_esempi": true,
+  "contiene_esempi": false,
   "aggiornato_il": "2026-10-08"
 }

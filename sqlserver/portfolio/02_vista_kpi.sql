@@ -2,6 +2,7 @@
    PORTFOLIO 02 - Vista con i KPI di progetto (tempi e costi).
      durata_prevista_gg   = giorni tra inizio e fine prevista
      durata_effettiva_gg  = giorni tra inizio e fine effettiva (vuota se in corso)
+     Con date_indicative = 1 lo scostamento dei tempi non viene calcolato.
      scostamento_tempi_pct= (durata effettiva - prevista) / prevista   (> 0 = ritardo)
      scostamento_costi_pct= (costo effettivo - budget) / budget        (> 0 = sopra budget)
                             calcolato solo sui progetti Completati: a progetto in corso
@@ -15,6 +16,7 @@ CREATE OR ALTER VIEW portfolio.v_progetto_kpi AS
 SELECT progetto.progetto_id,
        progetto.codice,
        progetto.nome,
+       progetto.organizzazione,
        progetto.settore,
        progetto.approccio,
        progetto.ruolo,
@@ -22,13 +24,15 @@ SELECT progetto.progetto_id,
        progetto.data_inizio,
        progetto.data_fine_prevista,
        progetto.data_fine_effettiva,
+       progetto.date_indicative,
        YEAR(progetto.data_inizio)                                            AS anno_inizio,
        DATEDIFF(day, progetto.data_inizio, progetto.data_fine_prevista)      AS durata_prevista_gg,
        DATEDIFF(day, progetto.data_inizio, progetto.data_fine_effettiva)     AS durata_effettiva_gg,
-       CAST(DATEDIFF(day, progetto.data_inizio, progetto.data_fine_effettiva)
-            - DATEDIFF(day, progetto.data_inizio, progetto.data_fine_prevista) AS decimal(10,4))
-         / NULLIF(DATEDIFF(day, progetto.data_inizio, progetto.data_fine_prevista), 0)
-                                                                             AS scostamento_tempi_pct,
+       CASE WHEN progetto.date_indicative = 0
+            THEN CAST(DATEDIFF(day, progetto.data_inizio, progetto.data_fine_effettiva)
+                      - DATEDIFF(day, progetto.data_inizio, progetto.data_fine_prevista) AS decimal(10,4))
+                 / NULLIF(DATEDIFF(day, progetto.data_inizio, progetto.data_fine_prevista), 0)
+       END                                                                   AS scostamento_tempi_pct,
        progetto.budget_previsto,
        progetto.costo_effettivo,
        CASE WHEN progetto.stato = N'Completato'
