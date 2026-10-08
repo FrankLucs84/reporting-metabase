@@ -48,7 +48,7 @@ Spuntate un passo alla volta. Ognuno ha un **controllo** che vi dice se potete a
 | ☐ | WSL e Docker Desktop | `docker run --rm hello-world` stampa **Hello from Docker!** | 3 |
 | ☐ | Progetto scaricato, `.env` creato | Nella cartella c'è il file `.env` | 4 |
 | ☐ | Metabase acceso | http://localhost:3000 mostra la pagina di Metabase | 5 |
-| ☐ | Report pubblicato | Lo script stampa **Dashboard pronto: http://localhost:3000/dashboard/…** | 6 |
+| ☐ | Report pubblicato | Lo script stampa **Dashboard pronto: http://localhost:3000/dashboard/…** 🪟 | 6 |
 
 Tempo complessivo [Inferenza]: da 1 a 3 ore la prima volta. La parte più lunga e imprevedibile è WSL/Docker (sezione 3), e dipende molto da come è configurato il PC.
 
@@ -455,7 +455,7 @@ Ci sono due strade. **Scegliete la A per avere subito il report Contoso**; la B 
    - crea il dashboard **Contoso - Vendite e Pareto clienti**.
 4. Alla fine stampa l'indirizzo del dashboard, di solito http://localhost:3000/dashboard/2. Entrate con `MB_ADMIN_EMAIL` e `MB_ADMIN_PASSWORD` del `.env`.
 
-✅ Provato su SQL Server 2022: il dashboard funziona con tutti i filtri.
+✅ Provato su SQL Server 2022: il dashboard funziona con tutti i filtri. 🪟 Provato anche su Windows, con Anaconda e account amministratore creato dalla pagina di benvenuto.
 
 ![Dashboard su SQL Server](img/dashboard-sqlserver.png)
 
@@ -466,6 +466,8 @@ Ci sono due strade. **Scegliete la A per avere subito il report Contoso**; la B 
 1. Al primo accesso su http://localhost:3000 Metabase propone una **configurazione guidata**: lingua, nome, email e password dell'amministratore.
 
    > Se poi volete usare anche la strada A, usate **le stesse credenziali** scritte nel `.env`.
+   >
+   > 🪟 **Percorso reale:** compilare la pagina di benvenuto con email e password **vostre**, saltare il passo "Aggiungi i tuoi dati", poi scrivere le stesse email e password in `MB_ADMIN_EMAIL` e `MB_ADMIN_PASSWORD` del `.env` e lanciare lo script. Funziona, ed è anche più sicuro che usare la password di esempio. Sono **due password diverse**: quella dell'account Metabase (per entrare voi in Metabase) e quella di `metabase_ro` (per far entrare Metabase in SQL Server).
 
 2. Al passo **"Aggiungi i tuoi dati"** (oppure dopo, da ⚙️ → **Impostazioni amministratore → Database → Aggiungi database**) compilate:
 
@@ -843,7 +845,7 @@ Differenze rispetto a Docker:
 | ID | Rischio / vincolo | Impatto | Mitigazione | Stato |
 |---|---|---|---|---|
 | R1 | Licenza Docker Desktop su PC aziendale | Uso non conforme | Verifica con l'IT, oppure alternativa JAR (sezione 11) | [Non verificato] |
-| R2 | Configurazione di Windows diversa da PC a PC (BIOS, WSL, rete aziendale, versione di SSMS) | Blocchi all'avvio | Riquadri 🧯 delle sezioni 2–5 e tabella della sezione 10, basati sul percorso reale | Parzialmente verificato 🪟: SSMS, script, TCP/IP, WSL e Docker provati su un PC Windows; lo script di deploy su Windows [Non verificato] |
+| R2 | Configurazione di Windows diversa da PC a PC (BIOS, WSL, rete aziendale, versione di SSMS) | Blocchi all'avvio | Riquadri 🧯 delle sezioni 2–5 e tabella della sezione 10, basati sul percorso reale | Verificato 🪟: l'intero percorso (SSMS, script, TCP/IP, WSL, Docker, Metabase, script di deploy) è stato completato su un PC Windows; altri PC possono differire |
 | R3 | Dati di esempio scambiati per dati reali | Decisioni errate | Il nome `ContosoLab` e i commenti negli script segnalano dati sintetici | Certo |
 | R4 | Perdita di dashboard create a mano | Lavoro perso | Backup di appdb (9.2); il report gestito da codice è in Git | Certo |
 | R5 | Le modifiche a mano nella collezione "Contoso - Report Pareto" vengono sovrascritte dallo script | Lavoro perso | Lavorare nella collezione personale o in un'altra collezione | Certo |
