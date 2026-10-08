@@ -1,0 +1,8 @@
+{
+  "nome": "Nome Cognome",
+  "titolo": "Project Manager e Business Analyst · Progetti, competenze e formazione",
+  "link": [
+    { "testo": "LinkedIn", "url": "https://www.linkedin.com/in/il-tuo-profilo/" },
+    { "testo": "GitHub", "url": "https://github.com/FrankLucs84" }
+  ]
+}

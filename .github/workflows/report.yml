@@ -22,6 +22,7 @@ jobs:
           pip install -r scripts/requirements.txt
           python scripts/deploy.py validate --target postgres
           python scripts/deploy.py validate --target sqlserver
+          python scripts/deploy.py validate --target sqlserver --report report/portfolio/portfolio.yml
 
       - name: Avvia il warehouse con i dati di esempio
         run: |
@@ -54,9 +55,9 @@ jobs:
             sleep 3
           done
 
-      - name: Esegue gli script di installazione (01-04)
+      - name: Esegue gli script di installazione (Contoso 01-04, Portfolio 01-04)
         run: |
-          for f in sqlserver/*.sql; do
+          for f in sqlserver/*.sql sqlserver/portfolio/0[1-4]_*.sql; do
             echo "== $f"
             $SQLCMD -U sa -P "$SA_PASSWORD" -i "/repo/$f"
           done
@@ -71,3 +72,18 @@ jobs:
             docker cp /tmp/q/query.sql mssql:/tmp/query.sql
             $SQLCMD -U metabase_ro -P 'Cambiami-Metabase-2026!' -d ContosoLab -i /tmp/query.sql -o /dev/null
           done
+
+      - name: Esegue ogni query del report Portfolio con l'utente in sola lettura
+        run: |
+          for f in report/portfolio/sql/sqlserver/*.sql; do
+            echo "== $f"
+            sed -e 's/{{approccio}}/1=1/g; s/{{stato}}/1=1/g; s/{{settore}}/1=1/g' "$f" > /tmp/q/query.sql
+            docker cp /tmp/q/query.sql mssql:/tmp/query.sql
+            $SQLCMD -U metabase_ro -P 'Cambiami-Metabase-2026!' -d PortfolioLab -i /tmp/query.sql -o /dev/null
+          done
+
+      - name: Verifica il modello di inserimento e la pulizia degli esempi
+        run: |
+          $SQLCMD -U sa -P "$SA_PASSWORD" -i /repo/sqlserver/portfolio/06_modello_inserimento.sql -o /dev/null
+          $SQLCMD -U sa -P "$SA_PASSWORD" -i /repo/sqlserver/portfolio/05_cancella_esempi.sql
+          $SQLCMD -U sa -P "$SA_PASSWORD" -d PortfolioLab -h -1 -Q "SET NOCOUNT ON; IF (SELECT COUNT(*) FROM portfolio.progetto) <> 1 THROW 50000, 'pulizia esempi non corretta', 1"

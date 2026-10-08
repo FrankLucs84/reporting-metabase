@@ -1,0 +1,349 @@
+{
+  "progetti": [
+    {
+      "codice": "ESEMPIO-01",
+      "nome": "[Esempio] Migrazione ERP",
+      "settore": "Manifattura",
+      "approccio": "Predittivo",
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2023-02-01",
+      "data_fine_prevista": "2023-10-31",
+      "data_fine_effettiva": "2023-12-15",
+      "scostamento_tempi_pct": 0.165441176470588,
+      "scostamento_costi_pct": 0.08888888888888888,
+      "soddisfazione_cliente": 4,
+      "descrizione": "Passaggio al nuovo gestionale con migrazione dati e formazione utenti."
+    },
+    {
+      "codice": "ESEMPIO-02",
+      "nome": "[Esempio] Portale clienti",
+      "settore": "Servizi",
+      "approccio": "Agile",
+      "ruolo": "Product Owner",
+      "stato": "Completato",
+      "data_inizio": "2023-05-15",
+      "data_fine_prevista": "2023-12-20",
+      "data_fine_effettiva": "2023-12-18",
+      "scostamento_tempi_pct": -0.009132420091324,
+      "scostamento_costi_pct": -0.04210526315789473,
+      "soddisfazione_cliente": 5,
+      "descrizione": "Portale self-service sviluppato in sprint di due settimane."
+    },
+    {
+      "codice": "ESEMPIO-03",
+      "nome": "[Esempio] Audit sicurezza IT",
+      "settore": "IT",
+      "approccio": "Predittivo",
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2024-01-10",
+      "data_fine_prevista": "2024-04-30",
+      "data_fine_effettiva": "2024-05-20",
+      "scostamento_tempi_pct": 0.18018018018018,
+      "scostamento_costi_pct": 0.0875,
+      "soddisfazione_cliente": 4,
+      "descrizione": "Assessment, piano di rimedio e verifica di chiusura."
+    },
+    {
+      "codice": "ESEMPIO-04",
+      "nome": "[Esempio] Reporting direzionale",
+      "settore": "Manifattura",
+      "approccio": "Ibrido",
+      "ruolo": "Business Analyst",
+      "stato": "Completato",
+      "data_inizio": "2024-03-01",
+      "data_fine_prevista": "2024-07-31",
+      "data_fine_effettiva": "2024-07-25",
+      "scostamento_tempi_pct": -0.039473684210526,
+      "scostamento_costi_pct": -0.07333333333333333,
+      "soddisfazione_cliente": 5,
+      "descrizione": "Cruscotto KPI per la direzione con modello dati a stella."
+    },
+    {
+      "codice": "ESEMPIO-05",
+      "nome": "[Esempio] Directory aziendale AD/LDAP",
+      "settore": "IT",
+      "approccio": "Predittivo",
+      "ruolo": "Project Manager",
+      "stato": "Completato",
+      "data_inizio": "2024-06-01",
+      "data_fine_prevista": "2024-11-30",
+      "data_fine_effettiva": "2025-01-20",
+      "scostamento_tempi_pct": 0.28021978021978,
+      "scostamento_costi_pct": 0.1,
+      "soddisfazione_cliente": 3,
+      "descrizione": "Consolidamento delle identità e delle policy di accesso."
+    },
+    {
+      "codice": "ESEMPIO-06",
+      "nome": "[Esempio] Automazione flussi dati",
+      "settore": "Servizi",
+      "approccio": "Agile",
+      "ruolo": "Business Analyst",
+      "stato": "Completato",
+      "data_inizio": "2024-09-01",
+      "data_fine_prevista": "2025-02-28",
+      "data_fine_effettiva": "2025-02-28",
+      "scostamento_tempi_pct": 0.0,
+      "scostamento_costi_pct": -0.01777777777777777,
+      "soddisfazione_cliente": 4,
+      "descrizione": "Pipeline di integrazione dati con controlli di qualità."
+    },
+    {
+      "codice": "ESEMPIO-07",
+      "nome": "[Esempio] Assistente AI per il supporto",
+      "settore": "Servizi",
+      "approccio": "Ibrido",
+      "ruolo": "Project Manager",
+      "stato": "In corso",
+      "data_inizio": "2025-03-01",
+      "data_fine_prevista": "2025-12-31",
+      "data_fine_effettiva": null,
+      "scostamento_tempi_pct": null,
+      "scostamento_costi_pct": null,
+      "soddisfazione_cliente": null,
+      "descrizione": "Pilota di assistente conversazionale secondo il metodo CPMAI."
+    }
+  ],
+  "competenze": [
+    {
+      "nome": "Analisi dei requisiti",
+      "area": "Business Analysis",
+      "livello": 5
+    },
+    {
+      "nome": "Modellazione dei processi",
+      "area": "Business Analysis",
+      "livello": 4
+    },
+    {
+      "nome": "Metabase",
+      "area": "Dati e Reporting",
+      "livello": 3
+    },
+    {
+      "nome": "Power BI / DAX",
+      "area": "Dati e Reporting",
+      "livello": 4
+    },
+    {
+      "nome": "SQL",
+      "area": "Dati e Reporting",
+      "livello": 4
+    },
+    {
+      "nome": "Gestione progetti AI (CPMAI)",
+      "area": "Intelligenza Artificiale",
+      "livello": 3
+    },
+    {
+      "nome": "Prompt engineering",
+      "area": "Intelligenza Artificiale",
+      "livello": 3
+    },
+    {
+      "nome": "Gestione dei rischi",
+      "area": "Project Management",
+      "livello": 4
+    },
+    {
+      "nome": "Gestione stakeholder",
+      "area": "Project Management",
+      "livello": 4
+    },
+    {
+      "nome": "Pianificazione e WBS",
+      "area": "Project Management",
+      "livello": 5
+    },
+    {
+      "nome": "Scrum / Agile",
+      "area": "Project Management",
+      "livello": 4
+    },
+    {
+      "nome": "MS Project / Jira",
+      "area": "Strumenti",
+      "livello": 4
+    }
+  ],
+  "progetto_competenze": [
+    {
+      "codice": "ESEMPIO-01",
+      "competenza": "Pianificazione e WBS"
+    },
+    {
+      "codice": "ESEMPIO-01",
+      "competenza": "Gestione dei rischi"
+    },
+    {
+      "codice": "ESEMPIO-01",
+      "competenza": "Gestione stakeholder"
+    },
+    {
+      "codice": "ESEMPIO-01",
+      "competenza": "MS Project / Jira"
+    },
+    {
+      "codice": "ESEMPIO-02",
+      "competenza": "Scrum / Agile"
+    },
+    {
+      "codice": "ESEMPIO-02",
+      "competenza": "Analisi dei requisiti"
+    },
+    {
+      "codice": "ESEMPIO-02",
+      "competenza": "MS Project / Jira"
+    },
+    {
+      "codice": "ESEMPIO-03",
+      "competenza": "Pianificazione e WBS"
+    },
+    {
+      "codice": "ESEMPIO-03",
+      "competenza": "Gestione dei rischi"
+    },
+    {
+      "codice": "ESEMPIO-04",
+      "competenza": "Analisi dei requisiti"
+    },
+    {
+      "codice": "ESEMPIO-04",
+      "competenza": "Modellazione dei processi"
+    },
+    {
+      "codice": "ESEMPIO-04",
+      "competenza": "SQL"
+    },
+    {
+      "codice": "ESEMPIO-04",
+      "competenza": "Power BI / DAX"
+    },
+    {
+      "codice": "ESEMPIO-05",
+      "competenza": "Pianificazione e WBS"
+    },
+    {
+      "codice": "ESEMPIO-05",
+      "competenza": "Gestione dei rischi"
+    },
+    {
+      "codice": "ESEMPIO-05",
+      "competenza": "Gestione stakeholder"
+    },
+    {
+      "codice": "ESEMPIO-06",
+      "competenza": "Scrum / Agile"
+    },
+    {
+      "codice": "ESEMPIO-06",
+      "competenza": "Modellazione dei processi"
+    },
+    {
+      "codice": "ESEMPIO-06",
+      "competenza": "SQL"
+    },
+    {
+      "codice": "ESEMPIO-07",
+      "competenza": "Gestione stakeholder"
+    },
+    {
+      "codice": "ESEMPIO-07",
+      "competenza": "Scrum / Agile"
+    },
+    {
+      "codice": "ESEMPIO-07",
+      "competenza": "Gestione progetti AI (CPMAI)"
+    },
+    {
+      "codice": "ESEMPIO-07",
+      "competenza": "Prompt engineering"
+    }
+  ],
+  "formazione": [
+    {
+      "titolo": "[Esempio] Certificazione di project management",
+      "ente": "Ente certificatore",
+      "tipo": "Certificazione",
+      "area": "Project Management",
+      "data_conseguimento": "2023-06-20",
+      "ore": 35.0,
+      "pdu": 35.0,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] Corso Agile e Scrum",
+      "ente": "Ente formativo",
+      "tipo": "Corso",
+      "area": "Project Management",
+      "data_conseguimento": "2023-11-10",
+      "ore": 16.0,
+      "pdu": 16.0,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] SQL per l'analisi dati",
+      "ente": "Ente formativo",
+      "tipo": "Corso",
+      "area": "Dati e Reporting",
+      "data_conseguimento": "2024-02-15",
+      "ore": 24.0,
+      "pdu": null,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] Business analysis: requisiti",
+      "ente": "Ente formativo",
+      "tipo": "Corso",
+      "area": "Business Analysis",
+      "data_conseguimento": "2024-05-08",
+      "ore": 21.0,
+      "pdu": 21.0,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] Webinar AI nei progetti",
+      "ente": "Associazione",
+      "tipo": "Webinar",
+      "area": "Intelligenza Artificiale",
+      "data_conseguimento": "2024-10-03",
+      "ore": 2.0,
+      "pdu": 2.0,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] Gestione di progetti AI",
+      "ente": "Ente formativo",
+      "tipo": "Certificazione",
+      "area": "Intelligenza Artificiale",
+      "data_conseguimento": "2025-04-18",
+      "ore": 30.0,
+      "pdu": 30.0,
+      "credenziale_url": null
+    },
+    {
+      "titolo": "[Esempio] Convegno annuale PM",
+      "ente": "Associazione",
+      "tipo": "Evento",
+      "area": "Project Management",
+      "data_conseguimento": "2025-10-24",
+      "ore": 8.0,
+      "pdu": 8.0,
+      "credenziale_url": null
+    }
+  ],
+  "casi": [
+    {
+      "titolo": "Vendite e Pareto clienti",
+      "dataset": "Contoso (dati sintetici)",
+      "strumenti": "SQL Server, Metabase, Power BI",
+      "data_pubblicazione": "2026-10-08",
+      "link_url": "https://github.com/FrankLucs84/reporting-metabase",
+      "descrizione": "Report gestito come codice: KPI, andamento, Pareto e classificazione ABC dei clienti."
+    }
+  ],
+  "contiene_esempi": true,
+  "aggiornato_il": "2026-10-08"
+}

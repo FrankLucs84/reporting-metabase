@@ -8,6 +8,8 @@ Porting del report Power BI "Vendite e Pareto clienti" su **Metabase Open Source
 
 📗 **[Guida all'uso di Metabase in locale con SQL Server](docs/GUIDA_USO_METABASE.md)**: installazione su Windows, collegamento dei dati, esercitazioni passo-passo, backup, risoluzione dei problemi.
 
+📙 **[Guida al portfolio professionale](docs/GUIDA_PORTFOLIO.md)**: secondo report (progetti, competenze, formazione) e pagina web pubblica da collegare a LinkedIn.
+
 📘 **[Guida e confronto con Power BI](docs/GUIDA_PowerBI_vs_Metabase.md)**: mappa dei concetti, equivalenza delle misure DAX, ciclo di vita, quando scegliere cosa, rischi.
 
 ## Perché "manutenibile"
@@ -56,6 +58,17 @@ python scripts/deploy.py apply --target postgres
 ```
 
 In entrambi i casi, al primo avvio lo script crea l'utente amministratore (`MB_ADMIN_EMAIL` / `MB_ADMIN_PASSWORD`), collega il database con l'utente in sola lettura `metabase_ro` e pubblica il dashboard. L'indirizzo viene stampato alla fine (di norma http://localhost:3000/dashboard/2). Il database di destinazione si sceglie con `MB_TARGET` nel `.env`, oppure con `--target`.
+
+## Secondo report: portfolio professionale
+
+| Pezzo | File |
+|---|---|
+| Database `PortfolioLab` (da eseguire in SSMS) | `sqlserver/portfolio/01…06_*.sql` |
+| Report Metabase | `report/portfolio/portfolio.yml` → `python scripts/deploy.py apply --report report/portfolio/portfolio.yml` |
+| Export dei soli dati pubblicabili | `python scripts/export_portfolio.py` → `portfolio-site/data.json` |
+| Pagina web interattiva | `portfolio-site/` (pubblicata su GitHub Pages da `.github/workflows/pages.yml`) |
+
+Tutti i passaggi sono nella [guida al portfolio](docs/GUIDA_PORTFOLIO.md).
 
 ## Contenuto del dashboard
 

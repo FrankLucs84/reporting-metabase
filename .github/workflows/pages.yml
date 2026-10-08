@@ -1,0 +1,57 @@
+name: Pubblica portfolio
+
+# Pubblica la cartella portfolio-site su GitHub Pages a ogni modifica.
+# Prerequisito (una volta sola): Settings -> Pages -> Source: "GitHub Actions".
+on:
+  push:
+    branches: [main]
+    paths: ["portfolio-site/**", "scripts/anteprima_portfolio.py", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Controlla i dati pubblicati
+        run: |
+          python - <<'PY'
+          import json
+          data = json.load(open("portfolio-site/data.json", encoding="utf-8"))
+          json.load(open("portfolio-site/profilo.json", encoding="utf-8"))
+          text = json.dumps(data)
+          assert "budget_previsto" not in text and "costo_effettivo" not in text, "importi economici nel file pubblico"
+          print(f"OK: {len(data['progetti'])} progetti, {len(data['formazione'])} attività di formazione")
+          PY
+
+      - name: Genera l'immagine di anteprima per LinkedIn
+        run: |
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/anteprima_portfolio.py portfolio-site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: portfolio-site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

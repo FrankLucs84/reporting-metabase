@@ -11,6 +11,7 @@ Uso:
     python scripts/deploy.py apply             # crea o aggiorna il report
     python scripts/deploy.py apply --prune     # archivia anche le domande non più definite
     python scripts/deploy.py apply --target sqlserver   # usa SQL Server invece di PostgreSQL
+    python scripts/deploy.py apply --report report/portfolio/portfolio.yml   # un altro report
 
 Configurazione da variabili d'ambiente o dal file .env (vedi .env.example).
 """
@@ -57,12 +58,12 @@ def stable_id(*parts):
 
 # --------------------------------------------------------------------------- validate
 
-def load_report(target):
-    report = yaml.safe_load((REPORT_DIR / "report.yml").read_text(encoding="utf-8"))
+def load_report(report_file, target):
+    report = yaml.safe_load(report_file.read_text(encoding="utf-8"))
     if target not in report["targets"]:
         sys.exit(f"Target '{target}' sconosciuto: scegli tra {', '.join(report['targets'])}")
     report["database"] = report["targets"][target]
-    sql_dir = REPORT_DIR / report["database"]["sql_dir"]
+    sql_dir = report_file.parent / report["database"]["sql_dir"]
     for card in report["cards"]:
         card["query"] = (sql_dir / card["sql"]).read_text(encoding="utf-8")
     return report
@@ -362,11 +363,16 @@ def main():
     parser.add_argument("command", choices=["validate", "apply"])
     parser.add_argument("--prune", action="store_true", help="archivia le domande non più presenti in report.yml")
     parser.add_argument("--target", help="postgres o sqlserver (predefinito: MB_TARGET, altrimenti postgres)")
+    parser.add_argument("--report", default=str(REPORT_DIR / "report.yml"),
+                        help="file di definizione del report (predefinito: report/report.yml)")
     args = parser.parse_args()
 
     load_env()
     target = args.target or os.environ.get("MB_TARGET", "postgres")
-    report = load_report(target)
+    report_file = Path(args.report)
+    if not report_file.is_absolute():
+        report_file = (Path.cwd() / report_file).resolve()
+    report = load_report(report_file, target)
     errors = validate(report)
     if errors:
         print("Definizione del report non valida:")

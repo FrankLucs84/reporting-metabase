@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio professionale</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Progetti, competenze e formazione: dashboard interattiva generata da SQL Server.">
+<meta property="og:title" content="Portfolio professionale">
+<meta property="og:description" content="Progetti, competenze e formazione: dashboard interattiva generata da SQL Server.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://franklucs84.github.io/reporting-metabase/anteprima.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --div-low: #2a78d6;
+    --div-high: #e34948;
+    --banner: #fff4d6;
+    --banner-ink: #5c4400;
+    --link: #1c5cab;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --grid: #2c2c2a;
+      --axis: #383835;
+      --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --div-low: #3987e5;
+      --div-high: #e66767;
+      --banner: #3a3010;
+      --banner-ink: #f5dc9a;
+      --link: #86b6ef;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --div-low: #3987e5;
+    --div-high: #e66767;
+    --banner: #3a3010;
+    --banner-ink: #f5dc9a;
+    --link: #86b6ef;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--text-primary);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 16px 48px; }
+  header h1 { font-size: 28px; line-height: 1.2; margin: 0 0 4px; }
+  header p { margin: 0; color: var(--text-secondary); }
+  header .links { margin-top: 8px; display: flex; gap: 16px; flex-wrap: wrap; }
+  a { color: var(--link); }
+  .banner {
+    margin: 20px 0 0; padding: 10px 14px; border-radius: 8px;
+    background: var(--banner); color: var(--banner-ink); font-size: 14px;
+  }
+  h2 { font-size: 19px; margin: 40px 0 4px; }
+  .section-note { margin: 0 0 16px; color: var(--text-secondary); font-size: 14px; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin: 16px 0 20px; }
+  .filters label { display: grid; gap: 4px; font-size: 13px; color: var(--text-secondary); }
+  .filters select {
+    font: inherit; color: var(--text-primary); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; min-width: 160px;
+  }
+  .filters button {
+    font: inherit; font-size: 14px; color: var(--link); background: none; border: none;
+    padding: 6px 4px; cursor: pointer; text-decoration: underline;
+  }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .tile, .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  }
+  .tile { padding: 16px; }
+  .tile .value { font-size: 32px; font-weight: 600; line-height: 1.1; }
+  .tile .label { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+  .tile .hint { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; margin-top: 12px; }
+  .card { padding: 16px; margin-top: 12px; min-width: 0; }
+  .grid-2 .card { margin-top: 0; }
+  .card h3 { font-size: 15px; margin: 0 0 2px; }
+  .card .sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 12px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text-secondary); margin: 0 0 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .swatch.outline { background: transparent !important; border: 2px solid; }
+  .chart { width: 100%; position: relative; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { font-family: inherit; }
+  .empty { color: var(--text-muted); font-size: 14px; padding: 24px 0; }
+
+  details { margin-top: 12px; }
+  summary { cursor: pointer; color: var(--link); font-size: 14px; }
+  .table-wrap { overflow-x: auto; margin-top: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th { color: var(--text-secondary); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .list { display: grid; gap: 10px; }
+  .item h4 { margin: 0; font-size: 15px; }
+  .item p { margin: 2px 0 0; color: var(--text-secondary); font-size: 14px; }
+  .item .meta { color: var(--text-muted); font-size: 13px; }
+
+  .tooltip {
+    position: fixed; pointer-events: none; z-index: 10; display: none;
+    background: var(--surface); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); max-width: 280px;
+  }
+  .tooltip strong { display: block; font-size: 15px; }
+  .tooltip .muted { color: var(--text-secondary); }
+  footer { margin-top: 48px; color: var(--text-muted); font-size: 13px; }
+  .hit { cursor: default; }
+  .mark { pointer-events: none; }
+  .hit:focus { outline: none; }
+  .hit:focus + .mark, .hit:hover + .mark { filter: brightness(1.12); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="titolo">Portfolio professionale</h1>
+    <p id="sottotitolo">Progetti, competenze e formazione</p>
+    <div class="links" id="links"></div>
+  </header>
+  <div class="banner" id="banner" hidden>Questa pagina contiene <strong>dati di esempio</strong>, inventati a scopo dimostrativo.</div>
+
+  <h2>Progetti</h2>
+  <p class="section-note">I filtri si applicano a tutta la sezione progetti.</p>
+  <div class="filters" role="group" aria-label="Filtri progetti">
+    <label>Approccio <select id="f-approccio"></select></label>
+    <label>Settore <select id="f-settore"></select></label>
+    <label>Stato <select id="f-stato"></select></label>
+    <button type="button" id="f-reset">Azzera filtri</button>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="value" id="k-progetti">–</div><div class="label">Progetti</div></div>
+    <div class="tile"><div class="value" id="k-completati">–</div><div class="label">Completati</div></div>
+    <div class="tile"><div class="value" id="k-puntualita">–</div><div class="label">Puntualità</div><div class="hint">completati entro la data prevista</div></div>
+    <div class="tile"><div class="value" id="k-settori">–</div><div class="label">Settori</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Cronologia dei progetti</h3>
+    <p class="sub">Dall'inizio alla fine effettiva (o prevista, se il progetto non è concluso).</p>
+    <div class="legend" id="legend-gantt"></div>
+    <div class="chart" id="chart-gantt"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Scostamento dei tempi</h3>
+      <p class="sub">Progetti completati. A destra dello zero = ritardo, a sinistra = in anticipo.</p>
+      <div class="chart" id="chart-tempi"></div>
+    </div>
+    <div class="card">
+      <h3>Scostamento dei costi</h3>
+      <p class="sub">Progetti completati. A destra dello zero = sopra budget, a sinistra = sotto budget.</p>
+      <div class="chart" id="chart-costi"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Competenze più usate nei progetti</h3>
+    <p class="sub">Numero di progetti, tra quelli filtrati, in cui la competenza è stata applicata.</p>
+    <div class="chart" id="chart-competenze"></div>
+  </div>
+
+  <details>
+    <summary>Mostra i progetti in tabella</summary>
+    <div class="table-wrap"><table id="t-progetti"></table></div>
+  </details>
+
+  <h2>Formazione</h2>
+  <p class="section-note">Certificazioni, corsi, webinar ed eventi.</p>
+  <div class="tiles">
+    <div class="tile"><div class="value" id="k-ore">–</div><div class="label">Ore di formazione</div></div>
+    <div class="tile"><div class="value" id="k-cert">–</div><div class="label">Certificazioni</div></div>
+    <div class="tile"><div class="value" id="k-pdu">–</div><div class="label">PDU</div><div class="hint">Professional Development Units</div></div>
+  </div>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="card">
+      <h3>Ore di formazione per anno</h3>
+      <p class="sub">Tutte le attività di formazione pubblicate.</p>
+      <div class="chart" id="chart-ore"></div>
+    </div>
+    <div class="card">
+      <h3>Certificazioni e corsi</h3>
+      <p class="sub">Dal più recente.</p>
+      <div class="list" id="l-formazione"></div>
+    </div>
+  </div>
+
+  <h2>Casi di analisi dati</h2>
+  <p class="section-note">Report e dashboard realizzati, con il link al progetto.</p>
+  <div class="list" id="l-casi"></div>
+
+  <footer id="footer"></footer>
+</div>
+<div class="tooltip" id="tooltip" role="status"></div>
+
+<script>
+"use strict";
+const NS = "http://www.w3.org/2000/svg";
+const APPROCCI = ["Predittivo", "Agile", "Ibrido"];            // ordine fisso: colore = approccio
+const SLOT = { Predittivo: "--series-1", Agile: "--series-2", Ibrido: "--series-3" };
+const fmtPct = v => (v > 0 ? "+" : "") + (v * 100).toLocaleString("it-IT", { maximumFractionDigits: 1 }) + "%";
+const fmtNum = v => Number(v).toLocaleString("it-IT", { maximumFractionDigits: 1 });
+const fmtDate = s => s ? new Date(s + "T00:00:00").toLocaleDateString("it-IT", { year: "numeric", month: "short" }) : "–";
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+let DATA = null;
+const state = { approccio: "", settore: "", stato: "" };
+
+function el(tag, attrs = {}, text) {
+  const node = tag.startsWith("svg:") ? document.createElementNS(NS, tag.slice(4)) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// ---- tooltip -------------------------------------------------------------
+const tip = document.getElementById("tooltip");
+function showTip(evt, value, label, extra) {
+  tip.replaceChildren(el("strong", {}, value), el("div", {}, label));
+  if (extra) tip.append(el("div", { class: "muted" }, extra));
+  tip.style.display = "block";
+  const r = evt.target.getBoundingClientRect();
+  const x = evt.clientX ?? (r.left + r.width / 2), y = evt.clientY ?? r.top;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(window.innerWidth - w - 8, Math.max(8, x + 12)) + "px";
+  tip.style.top = Math.max(8, y - h - 12) + "px";
+}
+const hideTip = () => { tip.style.display = "none"; };
+function bindTip(hit, value, label, extra) {
+  hit.setAttribute("tabindex", "0");
+  hit.setAttribute("aria-label", `${label}: ${value}`);
+  hit.addEventListener("pointermove", e => showTip(e, value, label, extra));
+  hit.addEventListener("focus", e => showTip(e, value, label, extra));
+  hit.addEventListener("pointerleave", hideTip);
+  hit.addEventListener("blur", hideTip);
+}
+
+// ---- filtri ----------------------------------------------------------------
+function filtered() {
+  return DATA.progetti.filter(p =>
+    (!state.approccio || p.approccio === state.approccio) &&
+    (!state.settore || p.settore === state.settore) &&
+    (!state.stato || p.stato === state.stato));
+}
+function fillSelect(id, values, key) {
+  const sel = document.getElementById(id);
+  sel.replaceChildren(el("option", { value: "" }, "Tutti"));
+  values.forEach(v => sel.append(el("option", { value: v }, v)));
+  sel.addEventListener("change", () => { state[key] = sel.value; render(); });
+}
+
+// ---- grafici ---------------------------------------------------------------
+function width(container) { return Math.max(280, container.clientWidth); }
+// Taglia un'etichetta perché stia nello spazio disponibile (circa 6,6 px per carattere a 12,5 px).
+function fit(text, px) {
+  const max = Math.max(6, Math.floor(px / 6.6));
+  return text.length > max ? text.slice(0, max - 1) + "…" : text;
+}
+
+function gantt(container, rows) {
+  container.replaceChildren();
+  if (!rows.length) { container.append(el("div", { class: "empty" }, "Nessun progetto con questi filtri.")); return; }
+  const W = width(container), labelW = Math.min(240, W * 0.38), rowH = 30, top = 4, axisH = 26;
+  const H = top + rows.length * rowH + axisH;
+  const end = p => p.data_fine_effettiva || p.data_fine_prevista;
+  const t0 = new Date(Math.min(...rows.map(p => +new Date(p.data_inizio))));
+  const t1 = new Date(Math.max(...rows.map(p => +new Date(end(p)))));
+  const y0 = t0.getFullYear(), y1 = t1.getFullYear() + 1;
+  const from = +new Date(y0, 0, 1), to = +new Date(y1, 0, 1);
+  const x = d => labelW + (W - labelW - 8) * (+new Date(d + "T00:00:00") - from) / (to - from);
+  const svg = el("svg:svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Cronologia dei progetti" });
+  for (let y = y0; y <= y1; y++) {
+    const gx = labelW + (W - labelW - 8) * (+new Date(y, 0, 1) - from) / (to - from);
+    svg.append(el("svg:line", { x1: gx, x2: gx, y1: top, y2: H - axisH, stroke: css("--grid"), "stroke-width": 1 }));
+    if (y < y1) svg.append(el("svg:text", { x: gx + 4, y: H - 8, "font-size": 12, fill: css("--text-muted") }, String(y)));
+  }
+  rows.forEach((p, i) => {
+    const cy = top + i * rowH + rowH / 2, color = css(SLOT[p.approccio]);
+    const name = fit(p.nome, labelW - 14);
+    svg.append(el("svg:text", { x: labelW - 10, y: cy + 4, "text-anchor": "end", "font-size": 12.5, fill: css("--text-secondary") }, name));
+    const xs = x(p.data_inizio), xe = Math.max(xs + 6, x(end(p)));
+    const done = p.stato === "Completato";
+    const hit = el("svg:rect", { class: "hit", x: xs - 4, y: cy - rowH / 2, width: xe - xs + 8, height: rowH, fill: "transparent" });
+    const bar = el("svg:rect", { class: "mark", x: xs, y: cy - 7, width: xe - xs, height: 14, rx: 4,
+      fill: done ? color : css("--surface"), stroke: color, "stroke-width": done ? 0 : 2 });
+    svg.append(hit, bar);
+    bindTip(hit, `${fmtDate(p.data_inizio)} – ${fmtDate(end(p))}`, p.nome,
+      `${p.approccio} · ${p.stato} · ${p.ruolo}`);
+  });
+  container.append(svg);
+}
+
+function diverging(container, rows, field, lowLabel, highLabel) {
+  container.replaceChildren();
+  const data = rows.filter(p => p.stato === "Completato" && p[field] !== null && p[field] !== undefined);
+  if (!data.length) { container.append(el("div", { class: "empty" }, "Nessun progetto completato con questi filtri.")); return; }
+  const W = width(container), labelW = Math.min(170, W * 0.38), rowH = 28, axisH = 24, pad = W < 420 ? 40 : 48;
+  const H = data.length * rowH + axisH;
+  const m = Math.max(0.05, ...data.map(p => Math.abs(p[field])));
+  const plotL = labelW + pad, plotR = W - pad, zero = (plotL + plotR) / 2;
+  const sx = v => zero + (plotR - zero) * v / m;
+  const svg = el("svg:svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Scostamento ${field.includes("tempi") ? "dei tempi" : "dei costi"}` });
+  svg.append(el("svg:line", { x1: zero, x2: zero, y1: 0, y2: H - axisH, stroke: css("--axis"), "stroke-width": 1 }));
+  if (plotR - plotL >= 170) {   // su schermi stretti il significato resta nel sottotitolo e nel tooltip
+    svg.append(el("svg:text", { x: plotL, y: H - 6, "font-size": 12, fill: css("--text-muted") }, lowLabel));
+    svg.append(el("svg:text", { x: plotR, y: H - 6, "text-anchor": "end", "font-size": 12, fill: css("--text-muted") }, highLabel));
+  }
+  data.forEach((p, i) => {
+    const cy = i * rowH + rowH / 2, v = p[field], xv = sx(v);
+    const name = fit(p.nome, labelW - 12);
+    svg.append(el("svg:text", { x: labelW - 8, y: cy + 4, "text-anchor": "end", "font-size": 12.5, fill: css("--text-secondary") }, name));
+    const x0 = Math.min(zero, xv), w = Math.max(2, Math.abs(xv - zero));
+    const hit = el("svg:rect", { class: "hit", x: Math.min(x0, zero - 20), y: cy - rowH / 2, width: Math.max(w, 40), height: rowH, fill: "transparent" });
+    const bar = el("svg:rect", { class: "mark", x: x0, y: cy - 7, width: w, height: 14, rx: 4,
+      fill: css(v > 0 ? "--div-high" : "--div-low") });
+    svg.append(hit, bar);
+    svg.append(el("svg:text", { x: v > 0 ? xv + 6 : xv - 6, y: cy + 4, "text-anchor": v > 0 ? "start" : "end",
+      "font-size": 12, fill: css("--text-primary") }, fmtPct(v)));
+    bindTip(hit, fmtPct(v), p.nome, v > 0 ? highLabel : (v < 0 ? lowLabel : "In linea"));
+  });
+  container.append(svg);
+}
+
+function hbar(container, items, maxItems) {
+  container.replaceChildren();
+  const data = items.slice(0, maxItems);
+  if (!data.length) { container.append(el("div", { class: "empty" }, "Nessun dato con questi filtri.")); return; }
+  const W = width(container), labelW = Math.min(220, W * 0.45), rowH = 28, pad = 36;
+  const H = data.length * rowH;
+  const m = Math.max(...data.map(d => d.value));
+  const svg = el("svg:svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Competenze più usate" });
+  data.forEach((d, i) => {
+    const cy = i * rowH + rowH / 2, w = Math.max(4, (W - labelW - pad) * d.value / m);
+    svg.append(el("svg:text", { x: labelW - 8, y: cy + 4, "text-anchor": "end", "font-size": 12.5, fill: css("--text-secondary") }, fit(d.label, labelW - 12)));
+    const hit = el("svg:rect", { class: "hit", x: labelW, y: cy - rowH / 2, width: W - labelW, height: rowH, fill: "transparent" });
+    const bar = el("svg:rect", { class: "mark", x: labelW, y: cy - 7, width: w, height: 14, rx: 4, fill: css("--series-1") });
+    svg.append(hit, bar, el("svg:text", { x: labelW + w + 6, y: cy + 4, "font-size": 12, fill: css("--text-primary") }, String(d.value)));
+    bindTip(hit, `${d.value} ${d.value === 1 ? "progetto" : "progetti"}`, d.label, d.extra);
+  });
+  container.append(svg);
+}
+
+function vbar(container, items) {
+  container.replaceChildren();
+  if (!items.length) { container.append(el("div", { class: "empty" }, "Nessun dato.")); return; }
+  const W = width(container), H = 220, axisH = 24, top = 20, gap = 2;
+  const m = Math.max(...items.map(d => d.value));
+  const bw = Math.min(64, (W - 16) / items.length - 12);
+  const svg = el("svg:svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Ore di formazione per anno" });
+  svg.append(el("svg:line", { x1: 0, x2: W, y1: H - axisH, y2: H - axisH, stroke: css("--axis"), "stroke-width": 1 }));
+  const step = W / items.length;
+  items.forEach((d, i) => {
+    const h = Math.max(4, (H - axisH - top) * d.value / m), cx = step * i + step / 2;
+    const hit = el("svg:rect", { class: "hit", x: cx - bw / 2 - 6, y: top - 16, width: bw + 12, height: H - axisH - top + 16, fill: "transparent" });
+    const bar = el("svg:path", { class: "mark", fill: css("--series-1"),
+      d: `M${cx - bw / 2},${H - axisH - gap} V${H - axisH - h + 4} q0,-4 4,-4 H${cx + bw / 2 - 4} q4,0 4,4 V${H - axisH - gap} Z` });
+    svg.append(hit, bar,
+      el("svg:text", { x: cx, y: H - axisH - h - 6, "text-anchor": "middle", "font-size": 12, fill: css("--text-primary") }, fmtNum(d.value)),
+      el("svg:text", { x: cx, y: H - 6, "text-anchor": "middle", "font-size": 12, fill: css("--text-muted") }, d.label));
+    bindTip(hit, `${fmtNum(d.value)} ore`, d.label);
+  });
+  container.append(svg);
+}
+
+// ---- tabelle e liste ----------------------------------------------------------
+function table(id, columns, rows) {
+  const t = document.getElementById(id);
+  const head = el("tr");
+  columns.forEach(c => head.append(el("th", {}, c.label)));
+  const body = rows.map(r => {
+    const tr = el("tr");
+    columns.forEach(c => tr.append(el("td", c.num ? { class: "num" } : {}, c.get(r))));
+    return tr;
+  });
+  t.replaceChildren(el("thead"), el("tbody"));
+  t.tHead.append(head);
+  t.tBodies[0].append(...body);
+}
+
+function renderStatic() {
+  const f = DATA.formazione;
+  document.getElementById("k-ore").textContent = fmtNum(f.reduce((s, x) => s + (x.ore || 0), 0));
+  document.getElementById("k-cert").textContent = f.filter(x => x.tipo === "Certificazione").length;
+  document.getElementById("k-pdu").textContent = fmtNum(f.reduce((s, x) => s + (x.pdu || 0), 0));
+  const perAnno = {};
+  f.forEach(x => { const y = x.data_conseguimento.slice(0, 4); perAnno[y] = (perAnno[y] || 0) + (x.ore || 0); });
+  vbar(document.getElementById("chart-ore"), Object.keys(perAnno).sort().map(y => ({ label: y, value: perAnno[y] })));
+
+  const lf = document.getElementById("l-formazione");
+  lf.replaceChildren(...[...f].reverse().map(x => {
+    const item = el("div", { class: "item" });
+    const h = el("h4");
+    if (x.credenziale_url && /^https:\/\//.test(x.credenziale_url)) h.append(el("a", { href: x.credenziale_url, rel: "noopener" }, x.titolo));
+    else h.textContent = x.titolo;
+    item.append(h, el("div", { class: "meta" }, `${x.tipo} · ${x.ente} · ${fmtDate(x.data_conseguimento)} · ${fmtNum(x.ore)} ore`));
+    return item;
+  }));
+
+  const lc = document.getElementById("l-casi");
+  if (!DATA.casi.length) { lc.replaceChildren(el("div", { class: "empty" }, "Nessun caso pubblicato.")); return; }
+  lc.replaceChildren(...DATA.casi.map(c => {
+    const card = el("div", { class: "card item" });
+    const h = el("h4");
+    if (c.link_url && /^https:\/\//.test(c.link_url)) h.append(el("a", { href: c.link_url, rel: "noopener" }, c.titolo));
+    else h.textContent = c.titolo;
+    card.append(h);
+    if (c.descrizione) card.append(el("p", {}, c.descrizione));
+    card.append(el("div", { class: "meta" }, `${c.strumenti} · ${c.dataset} · ${fmtDate(c.data_pubblicazione)}`));
+    return card;
+  }));
+}
+
+function render() {
+  const rows = filtered();
+  const completati = rows.filter(p => p.stato === "Completato");
+  const puntuali = completati.filter(p => p.data_fine_effettiva && p.data_fine_effettiva <= p.data_fine_prevista);
+  document.getElementById("k-progetti").textContent = rows.length;
+  document.getElementById("k-completati").textContent = completati.length;
+  document.getElementById("k-puntualita").textContent =
+    completati.length ? Math.round(100 * puntuali.length / completati.length) + "%" : "–";
+  document.getElementById("k-settori").textContent = new Set(rows.map(p => p.settore)).size;
+
+  gantt(document.getElementById("chart-gantt"), rows);
+  diverging(document.getElementById("chart-tempi"), rows, "scostamento_tempi_pct", "in anticipo", "in ritardo");
+  diverging(document.getElementById("chart-costi"), rows, "scostamento_costi_pct", "sotto budget", "sopra budget");
+
+  const codici = new Set(rows.map(p => p.codice)), count = {};
+  DATA.progetto_competenze.filter(l => codici.has(l.codice)).forEach(l => { count[l.competenza] = (count[l.competenza] || 0) + 1; });
+  const area = Object.fromEntries(DATA.competenze.map(c => [c.nome, c.area]));
+  hbar(document.getElementById("chart-competenze"),
+    Object.entries(count).map(([k, v]) => ({ label: k, value: v, extra: area[k] }))
+      .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label, "it")), 10);
+
+  table("t-progetti", [
+    { label: "Progetto", get: p => p.nome },
+    { label: "Settore", get: p => p.settore },
+    { label: "Approccio", get: p => p.approccio },
+    { label: "Ruolo", get: p => p.ruolo },
+    { label: "Stato", get: p => p.stato },
+    { label: "Inizio", get: p => fmtDate(p.data_inizio) },
+    { label: "Fine", get: p => fmtDate(p.data_fine_effettiva || p.data_fine_prevista) },
+    { label: "Scost. tempi", num: true, get: p => p.stato === "Completato" && p.scostamento_tempi_pct !== null ? fmtPct(p.scostamento_tempi_pct) : "–" },
+    { label: "Scost. costi", num: true, get: p => p.scostamento_costi_pct !== null ? fmtPct(p.scostamento_costi_pct) : "–" },
+  ], rows);
+}
+
+function legend() {
+  const lg = document.getElementById("legend-gantt");
+  const presenti = APPROCCI.filter(a => DATA.progetti.some(p => p.approccio === a));
+  lg.replaceChildren(...presenti.map(a => {
+    const s = el("span"); const sw = el("i", { class: "swatch" });
+    sw.style.background = `var(${SLOT[a]})`; s.append(sw, document.createTextNode(a)); return s;
+  }));
+  const s = el("span"); const sw = el("i", { class: "swatch outline" });
+  sw.style.borderColor = "var(--text-muted)"; s.append(sw, document.createTextNode("contorno = non ancora concluso"));
+  lg.append(s);
+}
+
+async function main() {
+  const [data, profilo] = await Promise.all([
+    fetch("data.json", { cache: "no-store" }).then(r => r.json()),
+    fetch("profilo.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  ]);
+  DATA = data;
+  if (profilo.nome) { document.getElementById("titolo").textContent = profilo.nome; document.title = `${profilo.nome} · Portfolio`; }
+  if (profilo.titolo) document.getElementById("sottotitolo").textContent = profilo.titolo;
+  const links = document.getElementById("links");
+  (profilo.link || []).filter(l => /^https:\/\//.test(l.url)).forEach(l => links.append(el("a", { href: l.url, rel: "noopener" }, l.testo)));
+  document.getElementById("banner").hidden = !DATA.contiene_esempi;
+  document.getElementById("footer").textContent =
+    `Dati aggiornati al ${new Date(DATA.aggiornato_il + "T00:00:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}. ` +
+    "Generato da SQL Server tramite Metabase: sono pubblicati solo i dati contrassegnati come pubblicabili e nessun importo economico.";
+
+  const uniq = k => [...new Set(DATA.progetti.map(p => p[k]))].sort((a, b) => a.localeCompare(b, "it"));
+  fillSelect("f-approccio", APPROCCI.filter(a => DATA.progetti.some(p => p.approccio === a)), "approccio");
+  fillSelect("f-settore", uniq("settore"), "settore");
+  fillSelect("f-stato", uniq("stato"), "stato");
+  document.getElementById("f-reset").addEventListener("click", () => {
+    Object.keys(state).forEach(k => { state[k] = ""; document.getElementById("f-" + k).value = ""; });
+    render();
+  });
+  legend(); renderStatic(); render();
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(() => { renderStatic(); render(); }, 150); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { renderStatic(); render(); });
+}
+main().catch(err => {
+  document.querySelector(".wrap").append(el("p", { class: "empty" }, "Impossibile caricare i dati (data.json)."));
+  console.error(err);
+});
+</script>
+</body>
+</html>

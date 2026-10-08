@@ -1,0 +1,121 @@
+# Report "Portfolio professionale" su Metabase.
+# Dati: database PortfolioLab (script in sqlserver/portfolio/).
+# Pubblicazione:  python scripts/deploy.py apply --report report/portfolio/portfolio.yml
+
+targets:
+  sqlserver:
+    name: Portfolio (SQL Server)
+    engine: sqlserver
+    dbname: PortfolioLab
+    schema: portfolio
+    user: metabase_ro
+    sql_dir: sql/sqlserver
+
+collection:
+  name: Portfolio professionale
+  description: Contenuti gestiti da codice (repository reporting-metabase, report/portfolio). Non modificare a mano.
+
+filters:
+  - key: approccio
+    name: Approccio
+    type: string/=
+    field: [v_progetto_kpi, approccio]
+  - key: stato
+    name: Stato
+    type: string/=
+    field: [v_progetto_kpi, stato]
+  - key: settore
+    name: Settore
+    type: string/=
+    field: [v_progetto_kpi, settore]
+
+cards:
+  - name: Progetti
+    sql: kpi_progetti.sql
+    display: scalar
+    filters: [approccio, stato, settore]
+
+  - name: Progetti completati
+    sql: kpi_completati.sql
+    display: scalar
+    filters: [approccio, stato, settore]
+
+  - name: Puntualità
+    description: Quota di progetti completati entro la data di fine prevista.
+    sql: kpi_puntualita.sql
+    display: scalar
+    filters: [approccio, stato, settore]
+    columns: { puntualita: { percent: true } }
+
+  - name: Ore di formazione
+    sql: kpi_ore_formazione.sql
+    display: scalar
+
+  - name: Progetti per approccio
+    sql: progetti_per_approccio.sql
+    display: bar
+    filters: [approccio, stato, settore]
+    x: [approccio]
+    y: [progetti]
+    x_title: Approccio
+    y_title: Progetti
+    columns: { progetti: { title: Progetti } }
+
+  - name: Scostamento tempi e costi
+    description: Progetti completati. Valori positivi = ritardo o costo sopra budget.
+    sql: scostamenti_progetti.sql
+    display: row
+    filters: [approccio, stato, settore]
+    x: [nome]
+    y: [scostamento_tempi_pct, scostamento_costi_pct]
+    columns:
+      scostamento_tempi_pct: { percent: true, title: Tempi }
+      scostamento_costi_pct: { percent: true, title: Costi }
+
+  - name: Competenze più usate
+    sql: competenze_usate.sql
+    display: row
+    filters: [approccio, stato, settore]
+    x: [competenza]
+    y: [progetti]
+    columns: { progetti: { title: Progetti } }
+
+  - name: Ore di formazione per anno
+    sql: formazione_per_anno.sql
+    display: bar
+    x: [anno]
+    y: [ore]
+    x_title: Anno
+    y_title: Ore
+    columns: { ore: { title: Ore } }
+
+  - name: Elenco progetti
+    sql: elenco_progetti.sql
+    display: table
+    filters: [approccio, stato, settore]
+    columns:
+      codice: { title: Codice }
+      nome: { title: Progetto }
+      settore: { title: Settore }
+      approccio: { title: Approccio }
+      ruolo: { title: Ruolo }
+      stato: { title: Stato }
+      data_inizio: { title: Inizio }
+      data_fine_prevista: { title: Fine prevista }
+      data_fine_effettiva: { title: Fine effettiva }
+      pubblicabile: { title: Pubblicabile }
+
+dashboard:
+  name: Portfolio professionale
+  description: Progetti, competenze e formazione. I filtri si applicano ai progetti.
+  filters: [approccio, stato, settore]
+  layout:
+    - { card: Progetti,                  row: 0,  col: 0,  width: 6,  height: 3 }
+    - { card: Progetti completati,       row: 0,  col: 6,  width: 6,  height: 3 }
+    - { card: Puntualità,                row: 0,  col: 12, width: 6,  height: 3 }
+    - { card: Ore di formazione,         row: 0,  col: 18, width: 6,  height: 3 }
+    - { card: Scostamento tempi e costi, row: 3,  col: 0,  width: 16, height: 11 }
+    - { card: Progetti per approccio,    row: 3,  col: 16, width: 8,  height: 11 }
+    - { card: Competenze più usate,      row: 14, col: 0,  width: 12, height: 8 }
+    - { card: Ore di formazione per anno, row: 14, col: 12, width: 12, height: 8 }
+    - { card: Elenco progetti,           row: 22, col: 0,  width: 24, height: 7 }
