@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<meta name="robots" content="noindex">
+<title>Copertina portfolio</title>
+<!-- Immagine di anteprima per LinkedIn (1200x627), generata da scripts/anteprima_portfolio.py -->
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.10);
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --accent: #1c5cab;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 627px; overflow: hidden; }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 56px 64px 44px; display: grid; grid-template-rows: auto auto 1fr auto; gap: 0;
+  }
+  .eyebrow { font-size: 22px; font-weight: 600; color: var(--accent); letter-spacing: 0.02em; }
+  h1 { font-size: 68px; line-height: 1.05; font-weight: 700; margin-top: 10px; letter-spacing: -0.01em; }
+  .role { font-size: 30px; color: var(--ink-2); margin-top: 10px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 34px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; }
+  .stat .v { font-size: 52px; font-weight: 700; line-height: 1; }
+  .stat .l { font-size: 20px; color: var(--ink-2); margin-top: 8px; }
+  .timeline { margin-top: 36px; }
+  .bar-row { position: relative; height: 30px; }
+  .bar { position: absolute; top: 4px; height: 22px; border-radius: 11px; }
+  .axis { position: relative; height: 22px; border-top: 1px solid var(--grid); margin-top: 6px; }
+  .axis span { position: absolute; top: 4px; font-size: 15px; color: var(--muted); transform: translateX(-50%); }
+  .legend { display: flex; gap: 22px; font-size: 18px; color: var(--ink-2); margin-top: 6px; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 8px; vertical-align: -1px; }
+  .url { font-size: 20px; color: var(--muted); align-self: end; display: flex; justify-content: space-between; }
+  .url b { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="eyebrow">Portfolio professionale · dashboard interattiva</div>
+    <h1 id="nome">Portfolio professionale</h1>
+    <div class="role" id="ruolo"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="v" id="s-progetti">–</div><div class="l">progetti</div></div>
+    <div class="stat"><div class="v" id="s-org">–</div><div class="l">organizzazioni</div></div>
+    <div class="stat"><div class="v" id="s-comp">–</div><div class="l">competenze</div></div>
+    <div class="stat"><div class="v" id="s-cert">–</div><div class="l">certificazioni</div></div>
+  </div>
+  <div class="timeline" id="timeline"></div>
+  <div class="url"><span>SQL Server · Metabase · GitHub Pages</span><b>franklucs84.github.io/reporting-metabase</b></div>
+<script>
+"use strict";
+const SLOTS = ["--s1", "--s2", "--s3"];
+const set = (id, v) => { document.getElementById(id).textContent = v; };
+Promise.all([
+  fetch("data.json").then(r => r.json()),
+  fetch("profilo.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
+]).then(([data, profilo]) => {
+  if (profilo.nome) set("nome", profilo.nome);
+  if (profilo.titolo) set("ruolo", profilo.titolo);
+  const progetti = data.progetti;
+  const orgs = [...new Set(progetti.map(p => p.organizzazione).filter(Boolean))].sort((a, b) => a.localeCompare(b, "it"));
+  set("s-progetti", progetti.length);
+  set("s-org", orgs.length);
+  set("s-comp", data.competenze.length);
+  set("s-cert", data.formazione.filter(f => f.tipo === "Certificazione").length);
+
+  // Cronologia stilizzata: un'unica barra per organizzazione, dal primo all'ultimo progetto.
+  const oggi = new Date().toISOString().slice(0, 10);
+  const fine = p => p.data_fine_effettiva || p.data_fine_prevista || oggi;
+  const y0 = Math.min(...progetti.map(p => +p.data_inizio.slice(0, 4)));
+  const y1 = Math.max(...progetti.map(p => +fine(p).slice(0, 4))) + 1;
+  const pos = d => (100 * ((new Date(d) - new Date(y0, 0, 1)) / (new Date(y1, 0, 1) - new Date(y0, 0, 1)))).toFixed(2) + "%";
+  const tl = document.getElementById("timeline");
+  const row = document.createElement("div"); row.className = "bar-row";
+  const legend = document.createElement("div"); legend.className = "legend";
+  orgs.forEach((o, i) => {
+    const ps = progetti.filter(p => p.organizzazione === o);
+    const da = ps.map(p => p.data_inizio).sort()[0], a = ps.map(fine).sort().slice(-1)[0];
+    const bar = document.createElement("div"); bar.className = "bar";
+    bar.style.left = pos(da); bar.style.width = `calc(${pos(a)} - ${pos(da)})`;
+    bar.style.background = `var(${SLOTS[i % SLOTS.length]})`;
+    row.append(bar);
+    const item = document.createElement("span"); const sw = document.createElement("i");
+    sw.style.background = `var(${SLOTS[i % SLOTS.length]})`;
+    item.append(sw, document.createTextNode(o)); legend.append(item);
+  });
+  const axis = document.createElement("div"); axis.className = "axis";
+  for (let y = y0; y < y1; y++) {
+    if ((y - y0) % 2) continue;
+    const s = document.createElement("span"); s.textContent = y; s.style.left = pos(`${y}-07-01`); axis.append(s);
+  }
+  tl.append(row, axis, legend);
+  document.body.dataset.pronto = "1";
+});
+</script>
+</body>
+</html>
